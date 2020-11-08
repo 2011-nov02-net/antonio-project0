@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "kUpMHN8WMvXaUNMyAoo7SPDeDHbYs2SznJHEo7DQoRmCIcz7ki9a04pprdgDb6+xDXPMCt/ZL27KAOR+CTcn3A==",
+  "success": true,
+  "projectFilePath": "C:\\Revature\\antonio-project0\\StoreApplication\\StoreApplication.Library\\StoreApplication.Library.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mendac01\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\mendac01\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

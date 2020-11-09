@@ -6,9 +6,9 @@ namespace StoreApplication.Library
 {
     interface ILocation
     {
-        IEnumerable<Location> GetInventory();
-        IEnumerable<Location> AdjustInventoryForProduct(Product product, int amount);
-        IEnumerable<Location> ProcessOrder(Order order);
+        Dictionary<Product, int> GetInventory();
+        void AdjustInventoryForProduct(Product product, int amount);
+        void ProcessOrder(Order order);
         string LocationName { get; set; }
 
     }

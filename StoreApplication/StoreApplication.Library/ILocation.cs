@@ -6,10 +6,10 @@ namespace StoreApplication.Library
 {
     interface ILocation
     {
-        Dictionary<Product, int> GetInventory();
-        void AdjustInventoryForProduct(Product product, int amount);
+        Dictionary<Book, int> Inventory { get; set; }
+        string LocationName { get; }
+        void AdjustInventoryForProduct(Book book, int amount);
         void ProcessOrder(Order order);
-        string LocationName { get; set; }
 
     }
 }

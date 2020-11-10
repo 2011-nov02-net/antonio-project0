@@ -6,9 +6,9 @@ namespace StoreApplication.ConsoleApp
     class Program
     {
         public static string menu = "Welcome to your Book Store Management System:\n" +
-                "[a]add a new customer" + "\n[sc]search customers by name" + "\n[ddo]display details of an order"
-                + "\n[dhl]display all order history of a store location" + "[dhc]display all order history of a customer"
-                + "\n[s] Save Changes" + "\n[help] Show Menu" + "\n[q] Quit Application";
+                "[a]\tAdd a new Customer" + "\n[sc]\tSearch for a customer by name" + "\n[ddo]\tDisplay details of an order"
+                + "\n[dhl]\tDisplay all order history of a store location" + "\n[dhc]\tDisplay all order history of a customer"
+                + "\n[s]\tSave Changes" + "\n[help]\tShow Menu" + "\n[q]\tQuit Application";
         /// <summary>
         /// While the user is within the application and has not exited.
         /// Present to them the options they have to choose from in terms of functionality.
@@ -23,33 +23,37 @@ namespace StoreApplication.ConsoleApp
             // Load data from file
 
             // Begin the app loop to collect input
-            string input = "";
-            string response = "";
+            string menuOption = "";
+            string response;
 
             // Display Options
             Console.WriteLine(menu);
-            while (input != "q")
+            while (menuOption != "q")
             {
                 // Collect Input
-                input = Console.ReadLine();
-                if (iv.IsValidMainMenuSelection(input, out response))
+                menuOption = Console.ReadLine();
+                if (iv.IsValidMainMenuSelection(menuOption, out response))
                 {
-                    switch (input)
+                    string input = "";
+                    switch (menuOption)
                     {
                         case "a":
-                            Console.WriteLine("You Have selected [Add New Customer].");
+                            Console.WriteLine("You Have selected [Add New Customer]."+"\nPlease enter the name of the first and last name of the customer separated by a space:");
+                            input = Console.ReadLine();
+                            storeManager.CreateNewCustomer(input, out response);
+                            Console.WriteLine(response);
                             break;
                         case "sc":
-                            Console.WriteLine("You Have selected [Search By Customer Name].");
+                            Console.WriteLine("You Have selected [Search By Customer Name]."+"\nPlease enter the ID of the customer:");
                             break;
                         case "ddo":
-                            Console.WriteLine("You Have selected [Display Details of an Order].");
+                            Console.WriteLine("You Have selected [Display Details of an Order]."+"\nPlease enter the order number:");
                             break;
                         case "dhl":
-                            Console.WriteLine("You Have selected [Display Order History of Location].");
+                            Console.WriteLine("You Have selected [Display Order History of Location]."+"\nPlease enter the location ID:");
                             break;
                         case "dhc":
-                            Console.WriteLine("You Have selected [Display Order History of Customer].");
+                            Console.WriteLine("You Have selected [Display Order History of Customer]."+"Please enter the customer name:");
                             break;
                         case "s":
                             Console.WriteLine("You Have selected [Save Changes].");
@@ -61,6 +65,7 @@ namespace StoreApplication.ConsoleApp
                             Console.WriteLine("You Have selected [Quit].");
                             break;
                     }
+                    Console.WriteLine(menu);
                 }
                 else
                 {

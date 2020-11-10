@@ -9,7 +9,7 @@ namespace StoreApplication.ConsoleApp
 {
     class InputValidation : IInputValidation
     {
-        private readonly string[] _mainMenuSelections = { "a", "sc", "ddo", "dhl", "dhc", "s", "q" };
+        private readonly string[] _mainMenuSelections = { "a", "sc", "ddo", "dhl", "dhc", "s", "q", "help"};
         Regex alphanumeric = new Regex("^[a-zA-Z0-9]*$");
 
         public bool IsValidMainMenuSelection(string candidate, out string message)

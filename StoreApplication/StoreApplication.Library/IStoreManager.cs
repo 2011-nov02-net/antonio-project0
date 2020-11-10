@@ -10,13 +10,13 @@ namespace StoreApplication.Library
         List<Customer> Customers { get; set; }
         List<Order> Orders { get; set; }
         List<Location> Locations { get; set; }
-        bool LoadData();
-        bool SaveData();
-        Order PlaceOrderAtLocation();
-        Customer CreateNewCustomer();
-        Customer FindCustomerByName(string candidate);
-        string GetOrderDetails(int orderNumber);
-        string GetOrderHistoryByLocation(Location location);
-        string GetOrderHistoryByCustomerName(string candidate);         
+        bool LoadData(out string message);
+        bool SaveData(out string message);
+        Order PlaceOrderAtLocation(string locationID, out string message);
+        Customer CreateNewCustomer(string newCustomerName, out string message);
+        Customer FindCustomerByName(string candidate, out string message);
+        string GetOrderDetails(int orderNumber, out string message);
+        string GetOrderHistoryByLocation(Location location, out string message);
+        string GetOrderHistoryByCustomerName(string candidate, out string message);         
     }
 }

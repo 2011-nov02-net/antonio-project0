@@ -4,7 +4,7 @@ using System.Text;
 
 namespace StoreApplication.Library
 {
-    class Book : IBook
+    public class Book : IBook
     {
         private string _isbn;
         private string _authorLastName;

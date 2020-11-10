@@ -4,7 +4,7 @@ using System.Text;
 
 namespace StoreApplication.Library
 {
-    class Location : ILocation
+    public class Location : ILocation
     {
         public Dictionary<Book, int> Inventory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 

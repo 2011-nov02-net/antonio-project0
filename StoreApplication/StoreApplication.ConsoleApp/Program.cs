@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StoreApplication.Library;
+using System;
 
 namespace StoreApplication.ConsoleApp
 {
@@ -10,6 +11,11 @@ namespace StoreApplication.ConsoleApp
         /// </summary>
         static void Main(string[] args)
         {
+            // Create StoreManager
+            StoreManager storeManager = new StoreManager();
+
+            // Load data from file
+
             // Begin the app loop to collect input
             string input = "";
             while (input != "")
@@ -21,13 +27,18 @@ namespace StoreApplication.ConsoleApp
                 // place orders to store locations for customers
                 
                 /*  
-                    add a new customer
-                    search customers by name
-                    display details of an order
-                    display all order history of a store location
-                    display all order history of a customer
+                    [a]add a new customer
+                    [s]search customers by name
+                    [ddo]display details of an order
+                        get order number
+                    [dhl]display all order history of a store location
+                        get store location ID
+                    [dhc]display all order history of a customer
+                        get customer ID
                 */
             }
+
+            // Save data to file
         }
     }
 }

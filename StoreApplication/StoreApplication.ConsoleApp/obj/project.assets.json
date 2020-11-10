@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.1": {}
+    ".NETCoreApp,Version=v3.1": {
+      "StoreApplication.Library/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/StoreApplication.Library.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/StoreApplication.Library.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "StoreApplication.Library/1.0.0": {
+      "type": "project",
+      "path": "../StoreApplication.Library/StoreApplication.Library.csproj",
+      "msbuildProject": "../StoreApplication.Library/StoreApplication.Library.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.1": []
+    ".NETCoreApp,Version=v3.1": [
+      "StoreApplication.Library >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\mendac01\\.nuget\\packages\\": {}
@@ -32,7 +51,11 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Revature\\antonio-project0\\StoreApplication\\StoreApplication.Library\\StoreApplication.Library.csproj": {
+              "projectPath": "C:\\Revature\\antonio-project0\\StoreApplication\\StoreApplication.Library\\StoreApplication.Library.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -45,5 +45,10 @@ namespace StoreApplication.Library
         {
             throw new NotImplementedException();
         }
+
+        public bool SaveData()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

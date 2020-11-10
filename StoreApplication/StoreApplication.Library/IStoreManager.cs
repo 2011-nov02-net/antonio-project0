@@ -11,6 +11,7 @@ namespace StoreApplication.Library
         List<Order> Orders { get; set; }
         List<Location> Locations { get; set; }
         bool LoadData();
+        bool SaveData();
         Order PlaceOrderAtLocation();
         Customer CreateNewCustomer();
         Customer FindCustomerByName(string candidate);

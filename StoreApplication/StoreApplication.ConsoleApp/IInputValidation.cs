@@ -6,7 +6,8 @@ namespace StoreApplication.Library
 {
     interface IInputValidation
     {
-        bool InputIsValidString();
-        bool InputIsValidNumber();
+        public bool IsValidMainMenuSelection(string candidate, out string message);
+        bool IsValidString(string candidate);
+        bool IsValidNumber(string candidate);
     }
 }

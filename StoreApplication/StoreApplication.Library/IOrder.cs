@@ -6,5 +6,10 @@ namespace StoreApplication.Library
 {
     interface IOrder
     {
+        Location LocationPlaced { get; }
+        Dictionary<Book, int> Purchase { get; }
+        DateTime TimeStamp { get; }
+
+        Order AddOrder();
     }
 }

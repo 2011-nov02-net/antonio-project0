@@ -6,7 +6,8 @@ namespace StoreApplication.Library
 {
     interface ICustomer
     {
-        string FirstName { get; set; }
-        string LastName { get; set; }
+        string FirstName { get; }
+        string LastName { get; }
+        int ID { get; }
     }
 }

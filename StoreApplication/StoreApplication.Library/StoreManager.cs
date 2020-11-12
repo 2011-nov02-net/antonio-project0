@@ -45,11 +45,13 @@ namespace StoreApplication.Library
             if(InputValidation.IsValidCustomerName(candidate, out validCheckerResponse))
             {
                 string[] names = candidate.Split(' ');
-                foreach(string name in Customers)
+                foreach(Customer customer in Customers)
                 {
 
                 }
             }
+            message = validCheckerResponse;
+            return false;
         }
 
         public static bool GetOrderDetails(int orderNumber, out string message)

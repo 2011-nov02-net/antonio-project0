@@ -1,5 +1,7 @@
 ﻿using StoreApplication.Library;
 using System;
+using System.Text.RegularExpressions;
+
 
 namespace StoreApplication.ConsoleApp
 {
@@ -15,11 +17,6 @@ namespace StoreApplication.ConsoleApp
         /// </summary>
         static void Main(string[] args)
         {
-            // Create StoreManager
-            StoreManager storeManager = new StoreManager();
-
-            InputValidation iv = new InputValidation();
-
             // Load data from file
 
             // Begin the app loop to collect input
@@ -32,7 +29,7 @@ namespace StoreApplication.ConsoleApp
             {
                 // Collect Input
                 menuOption = Console.ReadLine();
-                if (iv.IsValidMainMenuSelection(menuOption, out response))
+                if (IsValidMainMenuSelection(menuOption, out response))
                 {
                     string input = "";
                     switch (menuOption)
@@ -40,11 +37,22 @@ namespace StoreApplication.ConsoleApp
                         case "a":
                             Console.WriteLine("You Have selected [Add New Customer]."+"\nPlease enter the name of the first and last name of the customer separated by a space:");
                             input = Console.ReadLine();
-                            storeManager.CreateNewCustomer(input, out response);
+                            while (!StoreManager.CreateNewCustomer(input, out response))
+                            {
+                                Console.WriteLine(response);
+                                input = Console.ReadLine();
+                            }
                             Console.WriteLine(response);
                             break;
                         case "sc":
                             Console.WriteLine("You Have selected [Search By Customer Name]."+"\nPlease enter the ID of the customer:");
+                            input = Console.ReadLine();
+                            while(!StoreManager.FindCustomerByName(input, out response))
+                            {
+                                Console.WriteLine(response);
+                                input = Console.ReadLine();
+                            }
+                            Console.WriteLine(response);
                             break;
                         case "ddo":
                             Console.WriteLine("You Have selected [Display Details of an Order]."+"\nPlease enter the order number:");
@@ -65,7 +73,6 @@ namespace StoreApplication.ConsoleApp
                             Console.WriteLine("You Have selected [Quit].");
                             break;
                     }
-                    Console.WriteLine(menu);
                 }
                 else
                 {
@@ -74,6 +81,39 @@ namespace StoreApplication.ConsoleApp
             }
 
             // Save data to file
+        }
+
+        private static readonly string[] _mainMenuSelections = { "a", "sc", "ddo", "dhl", "dhc", "s", "q", "help" };
+        private static Regex alphanumeric = new Regex("^[a-zA-Z0-9]*$");
+
+        public static bool IsValidMainMenuSelection(string candidate, out string message)
+        {
+            if (!IsValidString(candidate))
+            {
+                message = "Please use Alphanumeric numbers only!";
+                return false;
+            }
+            foreach (var option in _mainMenuSelections)
+            {
+                if (candidate.ToLower() == option)
+                {
+                    message = "";
+                    return true;
+                }
+            }
+            message = "Input was not a menu option. Please enter a menu option. Enter [help] to see menu options again.";
+            return false;
+        }
+
+        public static bool IsValidNumber(string candidate)
+        {
+            int i;
+            return int.TryParse(candidate, out i);
+        }
+
+        public static bool IsValidString(string candidate)
+        {
+            return alphanumeric.IsMatch(candidate);
         }
     }
 }

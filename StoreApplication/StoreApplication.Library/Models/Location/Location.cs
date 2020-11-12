@@ -8,7 +8,7 @@ namespace StoreApplication.Library
     {
         public Dictionary<Book, int> Inventory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public string LocationName => throw new NotImplementedException();
+        public string LocationName { get; set; }
 
         public void AdjustInventoryForProduct(Book book, int amount)
         {
@@ -19,5 +19,6 @@ namespace StoreApplication.Library
         {
             throw new NotImplementedException();
         }
+
     }
 }

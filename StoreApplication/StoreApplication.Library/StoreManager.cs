@@ -49,7 +49,7 @@ namespace StoreApplication.Library
                 {
                     if(customer.FirstName == names[0] && customer.LastName == names[1])
                     {
-                        results += $"\n\t{customer.ToString()}";
+                        results += $"\n\t{customer}";
                     }
                 }
                 if (results == "Found: ")
@@ -83,7 +83,7 @@ namespace StoreApplication.Library
             throw new NotImplementedException();
         }
 
-        public static Order PlaceOrderAtLocation(string locationID, out string message)
+        public static Order PlaceOrderAtLocation(Customer customer, Location locationID, string order, out string message)
         {
             throw new NotImplementedException();
         }
@@ -93,17 +93,24 @@ namespace StoreApplication.Library
             throw new NotImplementedException();
         }
 
-        public static Location GetLocationByName(string nameOfLocation)
+        public static bool GetLocationByName(string nameOfLocation, out string message, out Location location)
         {
-            Location result = new Location();
-            foreach(Location l in Locations)
+            string results = "Found: ";
+            foreach (Location l in Locations)
             {
-                if(l.LocationName == nameOfLocation)
+                if (l.LocationName == nameOfLocation)
                 {
-                    result = l;
+                    location = l;
+                    results += $"\n\t{location}";
                 }
             }
-            return result;
+            if (results == "Found: ")
+            {
+                results += "\nNo Records Found.";
+            }
+            location = null;
+            message = results;
+            return true;
         }
     }
 }

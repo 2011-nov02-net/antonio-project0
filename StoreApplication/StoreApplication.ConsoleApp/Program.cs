@@ -7,8 +7,8 @@ namespace StoreApplication.ConsoleApp
 {
     class Program
     {
-        public static string menu = "Welcome to your Book Store Management System:\n" +
-                "[a]\tAdd a new Customer" + "\n[sc]\tSearch for a customer by name" + "\n[ddo]\tDisplay details of an order"
+        public static string menu = "Welcome to your Book Store Management System:\n" 
+                + "[p]\tPlace an order for a customer\n[a]\tAdd a new Customer" + "\n[sc]\tSearch for a customer by name" + "\n[ddo]\tDisplay details of an order"
                 + "\n[dhl]\tDisplay all order history of a store location" + "\n[dhc]\tDisplay all order history of a customer"
                 + "\n[s]\tSave Changes" + "\n[help]\tShow Menu" + "\n[q]\tQuit Application";
         /// <summary>
@@ -34,6 +34,23 @@ namespace StoreApplication.ConsoleApp
                     string input = "";
                     switch (menuOption)
                     {
+                        case "p":
+                            Console.WriteLine("You have selected [Place an order for an existing customer]. Please enter the customer name you want to place the order for:");
+                            input = Console.ReadLine();
+                            while(!StoreManager.FindCustomerByName(input, out response))
+                            {
+                                Console.WriteLine(response);
+                                input = Console.ReadLine();
+                            }
+
+                            Location location;
+
+                            Console.WriteLine("Please enter the store location that the customer wants to place the order:");
+                            while(!StoreManager.GetLocationByName(input, out response, out location))
+                            {
+
+                            }
+                            break;
                         case "a":
                             Console.WriteLine("You Have selected [Add New Customer]."+"\nPlease enter the name of the first and last name of the customer separated by a space:");
                             input = Console.ReadLine();
@@ -42,7 +59,6 @@ namespace StoreApplication.ConsoleApp
                                 Console.WriteLine(response);
                                 input = Console.ReadLine();
                             }
-                            Console.WriteLine(response);
                             break;
                         case "sc":
                             Console.WriteLine("You Have selected [Search By Customer Name]."+"\nPlease enter the full name of the customer:");
@@ -62,7 +78,6 @@ namespace StoreApplication.ConsoleApp
                                 Console.WriteLine(response);
                                 input = Console.ReadLine();
                             }
-                            Console.WriteLine(response);
                             break;
                         case "dhl":
                             Console.WriteLine("You Have selected [Display Order History of Location]."+"\nPlease enter the location ID:");
@@ -80,6 +95,7 @@ namespace StoreApplication.ConsoleApp
                             Console.WriteLine("You Have selected [Quit].");
                             break;
                     }
+                    Console.WriteLine(response);
                 }
                 else
                 {

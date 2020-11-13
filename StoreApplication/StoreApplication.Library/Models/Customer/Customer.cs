@@ -43,5 +43,10 @@ namespace StoreApplication.Library
             ID = customerIDSeed++;
             MyStoreLocation = StoreManager.GetLocationByName(locationName);
         }
+
+        public override string ToString()
+        {
+            return $"ID: [{ID}]\tName: [{Name}]\t StoreLocation: [{MyStoreLocation.ToString()}]";
+        }
     }
 }

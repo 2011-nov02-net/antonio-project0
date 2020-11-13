@@ -45,7 +45,7 @@ namespace StoreApplication.ConsoleApp
                             Console.WriteLine(response);
                             break;
                         case "sc":
-                            Console.WriteLine("You Have selected [Search By Customer Name]."+"\nPlease enter the ID of the customer:");
+                            Console.WriteLine("You Have selected [Search By Customer Name]."+"\nPlease enter the full name of the customer:");
                             input = Console.ReadLine();
                             while(!StoreManager.FindCustomerByName(input, out response))
                             {

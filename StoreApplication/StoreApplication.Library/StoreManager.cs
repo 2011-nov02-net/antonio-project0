@@ -13,7 +13,6 @@ namespace StoreApplication.Library
         private static List<Order> _orders = new List<Order>();
         private static List<Location> _locations = new List<Location>();
 
-
         private static string validCheckerResponse = "";
 
         public static List<Book> Books { get { return _books; } set { _books = Books; } }
@@ -47,7 +46,11 @@ namespace StoreApplication.Library
                 string[] names = candidate.Split(' ');
                 foreach(Customer customer in Customers)
                 {
-
+                    if(customer.FirstName == names[0] && customer.LastName == names[1])
+                    {
+                        message = $"Found, Customer:\n\t{customer.ToString()}";
+                        return true;
+                    }
                 }
             }
             message = validCheckerResponse;

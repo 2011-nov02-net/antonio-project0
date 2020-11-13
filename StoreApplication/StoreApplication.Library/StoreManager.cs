@@ -44,20 +44,26 @@ namespace StoreApplication.Library
             if(InputValidation.IsValidCustomerName(candidate, out validCheckerResponse))
             {
                 string[] names = candidate.Split(' ');
+                string results = "Found: ";
                 foreach(Customer customer in Customers)
                 {
                     if(customer.FirstName == names[0] && customer.LastName == names[1])
                     {
-                        message = $"Found, Customer:\n\t{customer.ToString()}";
-                        return true;
+                        results += $"\n\t{customer.ToString()}";
                     }
                 }
+                if (results == "Found: ")
+                {
+                    results += "\nNo Records Found.";
+                }
+                message = results;
+                return true;
             }
             message = validCheckerResponse;
             return false;
         }
 
-        public static bool GetOrderDetails(int orderNumber, out string message)
+        public static bool GetOrderDetails(string orderNumber, out string message)
         {
             throw new NotImplementedException();
         }

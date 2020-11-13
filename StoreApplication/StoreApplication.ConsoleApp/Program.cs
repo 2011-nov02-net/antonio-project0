@@ -56,6 +56,13 @@ namespace StoreApplication.ConsoleApp
                             break;
                         case "ddo":
                             Console.WriteLine("You Have selected [Display Details of an Order]."+"\nPlease enter the order number:");
+                            input = Console.ReadLine();
+                            while (!StoreManager.GetOrderDetails(input, out response))
+                            {
+                                Console.WriteLine(response);
+                                input = Console.ReadLine();
+                            }
+                            Console.WriteLine(response);
                             break;
                         case "dhl":
                             Console.WriteLine("You Have selected [Display Order History of Location]."+"\nPlease enter the location ID:");

@@ -48,8 +48,14 @@ namespace StoreApplication.ConsoleApp
                             Console.WriteLine("Please enter the store location that the customer wants to place the order:");
                             while(!StoreManager.GetLocationByName(input, out response, out location))
                             {
-
+                                Console.WriteLine(response);
+                                input = Console.ReadLine();
                             }
+
+                            Order newOrder;
+
+                            Console.WriteLine("Please enter the name of the product and the quantity, separated by a comma.");
+                            while(!StoreManager.CreateNewOrderItem(input, out response, out newOrder) || input == "d")
                             break;
                         case "a":
                             Console.WriteLine("You Have selected [Add New Customer]."+"\nPlease enter the name of the first and last name of the customer separated by a space:");

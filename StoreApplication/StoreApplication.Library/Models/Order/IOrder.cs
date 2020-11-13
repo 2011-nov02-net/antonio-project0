@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StoreApplication.Library.Models.Order;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,9 +10,8 @@ namespace StoreApplication.Library
         int OrderNumber { get; set; }
         Location LocationPlaced { get; }
         Customer Customer { get; }
-        Dictionary<Book, int> Purchase { get; }
+        OrderLine Purchase { get; }
         DateTime TimeStamp { get; }
 
-        Order AddOrder();
     }
 }

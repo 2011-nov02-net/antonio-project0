@@ -112,5 +112,13 @@ namespace StoreApplication.Library
             message = results;
             return true;
         }
+
+        public static bool CreateNewOrderItem(string input, out string message, out Order order)
+        {
+            string response = "Created Order Line:\n";
+            message = response;
+            Order o = new Order();
+
+        }
     }
 }

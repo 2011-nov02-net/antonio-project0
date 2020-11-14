@@ -7,12 +7,6 @@ namespace StoreApplication.DataAccess
 {
     public partial class Location
     {
-        public Location()
-        {
-            Inventories = new HashSet<Inventory>();
-            Orders = new HashSet<Order>();
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
 

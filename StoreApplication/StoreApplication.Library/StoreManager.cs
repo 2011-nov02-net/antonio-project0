@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using StoreApplication.Library.Models;
 
 namespace StoreApplication.Library
 {
@@ -13,8 +14,13 @@ namespace StoreApplication.Library
 
         public static bool AttemptToPlaceOrder(Customer customer, Order order, out string message)
         {
-            Location TransactionLocation = customer.MyStoreLocation;
-            TransactionLocation.AttemptOrderAtLocation(order);
+            customer.OrderHistory.Add(order);
+            return customer.MyStoreLocation.AttemptOrderAtLocation(order, out message);
+        }
+
+        public static bool CreateLineItem(string candidate, Order order)
+        {
+            return order.AddNewOrderLine(candidate);
         }
 
         public static bool CreateNewCustomer(string newCustomerName, int id, out string message)

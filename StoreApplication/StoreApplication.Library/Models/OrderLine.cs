@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StoreApplication.Library.Models.Order
+namespace StoreApplication.Library.Models
 {
     public class OrderLine
     {

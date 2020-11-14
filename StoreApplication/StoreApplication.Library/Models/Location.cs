@@ -1,21 +1,19 @@
-﻿using StoreApplication.Library.Models.Location;
-using StoreApplication.Library.Models.Order;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace StoreApplication.Library
+namespace StoreApplication.Library.Models
 {
-    public class Location : ILocation
+    public class Location
     {
         public int ID { get; }
         public string LocationName { get; set; }
 
         public static List<Location> Locations = new List<Location>();
         public static List<Order> OrderHistory = new List<Order>();
-        public List<Stock> Inventory = new List<Stock>();
+        public HashSet<Stock> Inventory = new HashSet<Stock>();
 
-        public Location(int id, string name, List<Stock> inventory)
+        public Location(int id, string name, HashSet<Stock> inventory)
         {
             ID = id;
             LocationName = name;
@@ -41,28 +39,14 @@ namespace StoreApplication.Library
             {
                 foreach (OrderLine ol in newOrder.Purchase)
                 {
-                    if (CheckStockForOrderAttempt(Book.Library.Find(b => b.ISBN == ol.BookISBN), ol.Quantity, out response))
-                    {
-                        response = "\n" + response;
-                        attempted++;
-                    }
+                    Inventory.Find(b => b.Book.ISBN == ol.BookISBN).AdjustStock(ol.Quantity);
                 }
-                PlaceOrder(newOrder);
+                OrderHistory.Add(newOrder);
                 return true;
             }
 
             return false;
 
-        }
-
-
-        public void PlaceOrder(Order order)
-        {
-            foreach (OrderLine ol in order.Purchase)
-            {
-                
-            }
-            OrderHistory.Add(order);
         }
 
         public bool CheckStockForOrderAttempt(Book book, int amount, out string message)

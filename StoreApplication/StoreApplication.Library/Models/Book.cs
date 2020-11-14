@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StoreApplication.Library
+namespace StoreApplication.Library.Models
 {
-    public class Book : IBook
+    public class Book
     {
         public string ISBN { get; set; }
         public string AuthorLastName { get; set; }

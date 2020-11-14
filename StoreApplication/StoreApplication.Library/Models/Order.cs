@@ -1,12 +1,11 @@
-﻿using StoreApplication.Library.Models.Order;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace StoreApplication.Library
+namespace StoreApplication.Library.Models
 {
-    public class Order : IOrder
+    public class Order
     {
         public Location LocationPlaced { get; set; }
 
@@ -20,19 +19,19 @@ namespace StoreApplication.Library
 
         public static List<Order> OrderHistory { get; }
 
-        public Order(Location location, DateTime time, Customer customer)
+        public Order(Location location, Customer customer)
         {
             LocationPlaced = location;
-            TimeStamp = time;
+            TimeStamp = DateTime.UtcNow;
             Customer = customer;
-            OrderHistory.Add(this);
         }
 
-        public void AddNewOrderLine(string ISBNAndQuantity)
+        public bool AddNewOrderLine(string ISBNAndQuantity)
         {
             string[] lineFiltered = SplitString(ISBNAndQuantity);
             var newOrderLine = new OrderLine(lineFiltered[0], Int32.Parse(lineFiltered[1]));
             Purchase.Add(newOrderLine);
+            return true;
         }
 
         public string[] SplitString(string items)

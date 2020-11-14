@@ -1,4 +1,5 @@
 ﻿using StoreApplication.Library;
+using StoreApplication.Library.Models;
 using System;
 using System.Text.RegularExpressions;
 
@@ -17,7 +18,8 @@ namespace StoreApplication.ConsoleApp
         /// </summary>
         static void Main(string[] args)
         {
-            // Load data from file
+            // Load data
+            using var dependencies = new Dependencies();
 
             // Begin the app loop to collect input
             string menuOption = "";
@@ -46,15 +48,19 @@ namespace StoreApplication.ConsoleApp
                             }
                             Console.WriteLine(customer);
                             // Create the new Order
-                            Order newOrder;
+                            Order newOrder = new Order(customer.MyStoreLocation, customer);
 
                             Console.WriteLine("Please enter the name of the product and the quantity, separated by a comma.");
                             // Collect line items until customer prompts finish order
-                            while (false)
+                            while (!StoreManager.AttemptToPlaceOrder(customer, newOrder, out response))
                             {
                                 // Create new line item
-                                
-                                // 
+                                input = Console.ReadLine();
+
+                                while (StoreManager.CreateLineItem(input, newOrder) && input != "d")
+                                {
+                                    input = Console.ReadLine();
+                                }
                             }
                             break;
                         case "a":
@@ -85,6 +91,13 @@ namespace StoreApplication.ConsoleApp
                             break;
                         case "dhc":
                             Console.WriteLine("You Have selected [Display Order History of Customer]."+"Please enter the customer name:");
+                            Customer found;
+                            while (!StoreManager.FindCustomerByName(input, out response, out found))
+                            {
+                                Console.WriteLine(response);
+                                input = Console.ReadLine();
+                            }
+                            Console.WriteLine(found.GetOrderHistroy());
                             break;
                         case "s":
                             Console.WriteLine("You Have selected [Save Changes].");

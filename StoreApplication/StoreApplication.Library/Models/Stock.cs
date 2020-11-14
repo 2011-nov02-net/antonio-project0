@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StoreApplication.Library.Models.Location
+namespace StoreApplication.Library.Models
 {
     public class Stock
     {

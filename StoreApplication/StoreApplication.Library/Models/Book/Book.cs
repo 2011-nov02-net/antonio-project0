@@ -6,22 +6,20 @@ namespace StoreApplication.Library
 {
     public class Book : IBook
     {
-        private string _isbn;
-        private string _authorLastName;
-        private string _authorFirstName;
-        private double _price;
+        public string ISBN { get; set; }
+        public string AuthorLastName { get; set; }
+        public string AuthorFirstName { get; set; }
+        public string AuthorFullName { get => $"{AuthorFirstName} {AuthorLastName}"; }
+        public decimal Price { get; set; }
+        public static List<Book> Library { get; set; }
 
-        public string ISBN { get => _isbn; }
-        public string AuthorLastName { get => _authorLastName; }
-        public string AuthorFirstName { get => _authorFirstName; }
-        public string AuthorFullName { get => $"{_authorFirstName} {_authorLastName}"; }
-        public double Price { get => _price; }
-
-        public Book(string isbn, string authorLastName, string authorFirstName)
+        public Book(string isbn, string authorLastName, string authorFirstName, decimal price)
         {
-            _isbn = isbn;
-            _authorFirstName = authorFirstName;
-            _authorLastName = authorLastName;
+            ISBN = isbn;
+            AuthorFirstName = authorFirstName;
+            AuthorLastName = authorLastName;
+            Price = price;
+            Library.Add(this);
         }
     }
 }

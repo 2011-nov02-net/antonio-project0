@@ -36,31 +36,31 @@ namespace StoreApplication.ConsoleApp
                     {
                         case "p":
                             Console.WriteLine("You have selected [Place an order for an existing customer]. Please enter the customer name you want to place the order for:");
+                            // Collect Input until user gives a valid customer name
                             input = Console.ReadLine();
-                            while(!StoreManager.FindCustomerByName(input, out response))
+                            Customer customer;
+                            while(!StoreManager.FindCustomerByName(input, out response, out customer))
                             {
                                 Console.WriteLine(response);
                                 input = Console.ReadLine();
                             }
-
-                            Location location;
-
-                            Console.WriteLine("Please enter the store location that the customer wants to place the order:");
-                            while(!StoreManager.GetLocationByName(input, out response, out location))
-                            {
-                                Console.WriteLine(response);
-                                input = Console.ReadLine();
-                            }
-
+                            Console.WriteLine(customer);
+                            // Create the new Order
                             Order newOrder;
 
                             Console.WriteLine("Please enter the name of the product and the quantity, separated by a comma.");
-                            while(!StoreManager.CreateNewOrderItem(input, out response, out newOrder) || input == "d")
+                            // Collect line items until customer prompts finish order
+                            while (false)
+                            {
+                                // Create new line item
+                                
+                                // 
+                            }
                             break;
                         case "a":
                             Console.WriteLine("You Have selected [Add New Customer]."+"\nPlease enter the name of the first and last name of the customer separated by a space:");
                             input = Console.ReadLine();
-                            while (!StoreManager.CreateNewCustomer(input, out response))
+                            while (!StoreManager.CreateNewCustomer(input, 0, out response))
                             {
                                 Console.WriteLine(response);
                                 input = Console.ReadLine();
@@ -69,21 +69,16 @@ namespace StoreApplication.ConsoleApp
                         case "sc":
                             Console.WriteLine("You Have selected [Search By Customer Name]."+"\nPlease enter the full name of the customer:");
                             input = Console.ReadLine();
-                            while(!StoreManager.FindCustomerByName(input, out response))
+                            Customer customer2;
+                            while(!StoreManager.FindCustomerByName(input, out response, out customer2))
                             {
                                 Console.WriteLine(response);
                                 input = Console.ReadLine();
                             }
-                            Console.WriteLine(response);
                             break;
                         case "ddo":
                             Console.WriteLine("You Have selected [Display Details of an Order]."+"\nPlease enter the order number:");
                             input = Console.ReadLine();
-                            while (!StoreManager.GetOrderDetails(input, out response))
-                            {
-                                Console.WriteLine(response);
-                                input = Console.ReadLine();
-                            }
                             break;
                         case "dhl":
                             Console.WriteLine("You Have selected [Display Order History of Location]."+"\nPlease enter the location ID:");
@@ -112,7 +107,7 @@ namespace StoreApplication.ConsoleApp
             // Save data to file
         }
 
-        private static readonly string[] _mainMenuSelections = { "a", "sc", "ddo", "dhl", "dhc", "s", "q", "help" };
+        private static readonly string[] _mainMenuSelections = { "p", "a", "sc", "ddo", "dhl", "dhc", "s", "q", "help" };
         private static Regex alphanumeric = new Regex("^[a-zA-Z0-9]*$");
 
         public static bool IsValidMainMenuSelection(string candidate, out string message)

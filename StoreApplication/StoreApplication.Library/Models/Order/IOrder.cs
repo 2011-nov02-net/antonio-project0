@@ -8,10 +8,10 @@ namespace StoreApplication.Library
     interface IOrder
     {
         int OrderNumber { get; set; }
-        Location LocationPlaced { get; }
-        Customer Customer { get; }
-        OrderLine Purchase { get; }
-        DateTime TimeStamp { get; }
+        Location LocationPlaced { get; set; }
+        Customer Customer { get; set; }
+        List<OrderLine> Purchase { get; set; }
+        DateTime TimeStamp { get; set; }
 
     }
 }

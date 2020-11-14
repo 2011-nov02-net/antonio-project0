@@ -1,52 +1,43 @@
-﻿using System;
+﻿using StoreApplication.Library.Models.Order;
+using System;
+using System.Collections.Generic;
 
 namespace StoreApplication.Library
 {
     public class Customer : ICustomer
     {
-        private static int customerIDSeed = 421555;
-        private string _firstname;
-        private string _lastname;
-        private int _id;
-        private Location _myStoreLocation;
+        private Location _mylocation;
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Name { get => FirstName + " " + LastName; }
+        public int ID { get; }
+        public Location MyStoreLocation;
+        public static List<Customer> Customers = new List<Customer>();
 
-        public string FirstName { get => _firstname; set => _firstname = value; }
-        public string LastName { get => _lastname;  set => _lastname = value;  }
-        public string Name { get => FirstName + " " + LastName;  }
-        public int ID { get => _id; set => _id = value; }
-        public Location MyStoreLocation
-        {
-            get => _myStoreLocation;
-            set
-            {
-                if (_myStoreLocation == null)
-                {
-                    _myStoreLocation = new Location();
-                }
-                else
-                {
-                    _myStoreLocation = value;
-                }
-            }
-        }
-        public Customer(string firstname, string lastname)
+        public Customer(string firstname, string lastname, int id)
         {
             FirstName = firstname;
             LastName = lastname;
-            ID = customerIDSeed++;
             MyStoreLocation = null;
+            ID = id;
         }
-        public Customer(string firstname, string lastname, string locationName)
+        public Customer(string firstname, string lastname, Location location, int id)
         {
             FirstName = firstname;
             LastName = lastname;
-            ID = customerIDSeed++;
-            MyStoreLocation = StoreManager.GetLocationByName(locationName);
+            MyStoreLocation = location;
+            ID = id;
+            Customers.Add(this);
+        }
+
+        public static Customer FindCustomerByName(string validCandidate)
+        {
+            return Customers.Find(c => c.Name == validCandidate);
         }
 
         public override string ToString()
         {
-            return $"ID: [{ID}]\tName: [{Name}]\t StoreLocation: [{MyStoreLocation.ToString()}]";
+            return $"ID: [{ID}]\tName: [{Name}]\t StoreLocation: [{MyStoreLocation}]";
         }
     }
 }

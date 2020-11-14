@@ -10,5 +10,6 @@ namespace StoreApplication.Library
         string AuthorLastName { get; }
         string AuthorFirstName { get; }
         string AuthorFullName { get; }
+        decimal Price { get; set; }
     }
 }

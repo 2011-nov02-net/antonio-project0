@@ -6,7 +6,7 @@ namespace StoreApplication.Library.Models
 {
     public class Location
     {
-        public int ID { get; }
+        public int ID { get; set; }
         public string LocationName { get; set; }
 
         public static List<Location> Locations = new List<Location>();

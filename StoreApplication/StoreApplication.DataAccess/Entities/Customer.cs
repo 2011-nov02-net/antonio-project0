@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace StoreApplication.DataAccess
+namespace StoreApplication.DataAccess.Entities
 {
     public partial class Customer
     {

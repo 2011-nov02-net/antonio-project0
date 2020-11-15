@@ -9,7 +9,7 @@ namespace StoreApplication.Library.Models
     public class Stock
     {
         public Book Book { get; set; }
-        private int Quantity { get; set; }
+        public int Quantity { get; set; }
 
         public Stock(Book book, int quantity)
         {

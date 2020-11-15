@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace StoreApplication.DataAccess
+namespace StoreApplication.DataAccess.Entities
 {
     public partial class StoreContext : DbContext
     {

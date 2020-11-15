@@ -9,26 +9,25 @@ namespace StoreApplication.DataAccess.Repositories
 {
     class StoreRepository
     {
-        private readonly DbContextOptions<StoreContext> _contextOptions;
+        private readonly DbContextOptions<Entities.StoreContext> _contextOptions;
 
-        public StoreRepository(DbContextOptions<StoreContext> contextOptions)
+        public StoreRepository(DbContextOptions<Entities.StoreContext> contextOptions)
         {
             _contextOptions = contextOptions;
         }
 
-        public IEnumerable<Library.Models.Location> GetAllLocations()
+        public IEnumerable<Library.Models.Location> GetAllLocations(string search = null)
         {
-            using var context = new StoreContext( _contextOptions);
+            using var context = new Entities.StoreContext( _contextOptions);
 
-            IQueryable<Location> dbLocations = context.Locations
-                .Include(i => i.Inventories);
-
-            HashSet<Library.Models.Stock> stock = new HashSet<Library.Models.Stock>();
-            foreach (Inventory s in dbLocations[0].Inventories)
+            IQueryable<Entities.Location> dbLocations = context.Locations
+                .Include(i => i.Inventories).AsNoTracking();
+            if(search != null)
             {
-
+                dbLocations = dbLocations.Where(i => i.Name.Contains(search));
             }
-            var appLocations = dbLocations.Select(s => new Library.Models.Location(s.Id, s.Name, ).ToList();
+
+            var appLocations = dbLocations.Select(s => new Library.Models.Location(s.Id, s.Name, (HashSet<Library.Models.Stock>)s.Inventories)).ToList();
 
             return appLocations;
         }

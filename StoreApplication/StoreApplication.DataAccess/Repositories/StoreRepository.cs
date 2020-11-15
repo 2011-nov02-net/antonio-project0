@@ -15,6 +15,13 @@ namespace StoreApplication.DataAccess.Repositories
         private readonly StoreContext  _context;
         private static readonly ILogger s_logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// A repository managing data access for restaurant objects and their review members,
+        /// using Entity Framework.
+        /// </summary>
+        /// <remarks>
+        /// This class ought to have better exception handling and logging.
+        /// </remarks>
         public StoreRepository(StoreContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -32,6 +39,53 @@ namespace StoreApplication.DataAccess.Repositories
             return dbLocations.Select(Mapper.MapLocationsWithInventory);
         }
 
+        /// <summary>
+        /// Add a new Customer. 
+        /// </summary>
+        public void AddACustomer(Library.Models.Customer customer)
+        {
+            if(customer.ID != 0)
+            {
+                s_logger.Warn($"Customer to be added has an ID ({customer.ID}) already: ignoring.");
+            }
 
+            s_logger.Info($"Adding Customer: {customer}");
+            Customer entity = Mapper.Map(customer);
+            entity.Id = 0;
+            _context.Add(entity);
+            Save();
+        }
+
+        public Library.Models.Customer FindCustomerByName(string search)
+        {
+            Customer dbCustomer = _context.Customers
+                .Include(l => l.Location)
+                .First(c => c.FirstName == search);
+            return Mapper.Map(_context.Customers.Find(dbCustomer.Id));
+        }
+
+        public string GetDetailsForOrder(int ordernumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetOrderHistoryByLocation(Library.Models.Location location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetOrderHistoryByCustomer(Library.Models.Customer customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Persist changes to the data source.
+        /// </summary>
+        public void Save()
+        {
+            s_logger.Info("Saving changes to the database");
+            _context.SaveChanges();
+        }
     }
 }

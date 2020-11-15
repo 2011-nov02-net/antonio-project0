@@ -6,16 +6,14 @@ namespace StoreApplication.Library.Models
 {
     public class OrderLine
     {
-        public string BookISBN { get; }
-        public int Quantity { get; }
-        public decimal TotalCost {
-            get => TotalCost;
-            set => TotalCost = Convert.ToDecimal(Quantity * Book.Library.Find(b => b.ISBN == BookISBN).Price);
-        }
+        public string BookISBN { get; set; }
+        public int Quantity { get; set; }
+        public int ID { get; set; }
+        public int OrderNumber { get; set; }
 
         public override string ToString()
         {
-            return $"ISBN: {BookISBN}\tQty:{Quantity}\tCost:{TotalCost}";
+            return $"ISBN: {BookISBN}\tQty:{Quantity}\t";
         }
     }       
 }

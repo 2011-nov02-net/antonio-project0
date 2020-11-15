@@ -17,56 +17,10 @@ namespace StoreApplication.Library.Models
 
         public int OrderNumber { get; set; }
 
-        public static List<Order> OrderHistory { get; }
-
-        public bool AddNewOrderLine(string ISBNAndQuantity)
+        public override string ToString()
         {
-            string[] lineFiltered = SplitString(ISBNAndQuantity);
-            //var newOrderLine;//new OrderLine(lineFiltered[0], Int32.Parse(lineFiltered[1]));
-            //Purchase.Add(newOrderLine);
-            return true;
+            return $"Order Number: {OrderNumber}\t{Customer}";
         }
 
-        public string[] SplitString(string items)
-        {
-            items = String.Concat(items.Where(c => !Char.IsWhiteSpace(c)));
-            return items.Split(',');
-        }
-
-        public decimal GetOrderTotal()
-        {
-            decimal total = 0;
-            foreach(OrderLine o in Purchase)
-            {
-                total += o.TotalCost;
-            }
-            return total;
-        }
-
-        public List<Order> GetOrderHistoryByLocation(Location location)
-        {
-            List<Order> orderHistoryForGivenLocation = new List<Order>();
-            foreach(Order o in OrderHistory)
-            {
-                if(o.LocationPlaced == location)
-                {
-                    orderHistoryForGivenLocation.Add(o);
-                }
-            }
-            return orderHistoryForGivenLocation;
-        }
-
-        public List<Order> GetOrderHistoryByCustomer(Customer customer)
-        {
-            List<Order> orderHistoryForGivenCustomer = new List<Order>();
-            foreach (Order o in OrderHistory)
-            {
-                if (o.Customer == customer)
-                {
-                    orderHistoryForGivenCustomer.Add(o);
-                }
-            }
-            return orderHistoryForGivenCustomer;
-        }
     }
 }

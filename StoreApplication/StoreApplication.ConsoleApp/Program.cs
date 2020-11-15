@@ -28,17 +28,11 @@ namespace StoreApplication.ConsoleApp
             using var dependencies = new Dependencies();
             XmlSerializer serializer = dependencies.CreateXmlSerializer();
 
+
             IStoreRepository storeRepository = dependencies.CreateStoreRepository();
 
-            var locations = storeRepository.GetAllLocations().ToList();
-            foreach(Location i in locations)
-            {
-                Console.WriteLine($"ID: {i.ID}\tLocation Name: {i.LocationName}");
-                foreach(Stock s in i.Inventory)
-                {
-                    Console.WriteLine($"\tISBN:{s.Book.ISBN}\tStock:{s.Quantity}");
-                }
-            }
+            //DisplayAllLocations(storeRepository);
+            Console.WriteLine(storeRepository.FindCustomerByName("Darko").ToString());
 
             /*
             // Begin the app loop to collect input
@@ -139,6 +133,20 @@ namespace StoreApplication.ConsoleApp
 
             // Save data to file
             */
+        }
+
+        public static void DisplayAllLocations(IStoreRepository storeRepository)
+        {
+
+            var locations = storeRepository.GetAllLocations().ToList();
+            foreach (Location i in locations)
+            {
+                Console.WriteLine($"ID: {i.ID}\tLocation Name: {i.LocationName}");
+                foreach (Stock s in i.Inventory)
+                {
+                    Console.WriteLine($"\tISBN:{s.Book.ISBN}\tStock:{s.Quantity}");
+                }
+            }
         }
 
         private static readonly string[] _mainMenuSelections = { "p", "a", "sc", "ddo", "dhl", "dhc", "s", "q", "help" };

@@ -2,20 +2,24 @@ drop table if exists orderline;
 drop table if exists orders;
 drop table if exists inventory;
 drop table if exists book;
-drop table if exists location;
 drop table if exists customer;
-
-create table customer(
-	id int primary key identity,
-	first_name nvarchar(50) not null,
-	last_name nvarchar(50) not null,
-	location_id int default 1
-)
+drop table if exists location;
 
 create table location(
 	id int primary key identity,
 	name nvarchar(50) not null
 )
+
+create table customer(
+	id int primary key identity,
+	first_name nvarchar(50) not null,
+	last_name nvarchar(50) not null,
+	location_id int foreign key  references location(id)
+)
+
+ALTER TABLE customer
+ADD CONSTRAINT df_location
+DEFAULT 1 FOR location_id;
 
 create table book(
 	isbn nvarchar(15) primary key,
@@ -52,6 +56,12 @@ insert into location (name) values ('Tampa, FL');
 insert into location (name) values ('New York, NY');
 insert into location (name) values ('Orlando, FL');
 insert into location (name) values ('Morgantown, WV');
+
+insert into customer (first_name, last_name) values ('Antonio','Mendez');
+insert into customer (first_name, last_name) values ('Darko','Mendez');
+insert into customer (first_name, last_name) values ('Gavin','Mendez');
+insert into customer (first_name, last_name) values ('Kayla','Mendez'); 
+
 
 insert into book (isbn, name, price, author_first_name, author_last_name) values ('978-0525948926', 'Atlas Shrugged', 29.99, 'Ayn', 'Rand');
 insert into book (isbn, name, price, author_first_name, author_last_name) values ('978-0452286757', 'The Fountainhead', 27.99, 'Ayn', 'Rand');
@@ -100,3 +110,5 @@ insert into inventory (location_id, book_isbn, quantity) values (6, '978-0452286
 insert into inventory (location_id, book_isbn, quantity) values (6, '978-1640320437', 0)
 insert into inventory (location_id, book_isbn, quantity) values (6, '978-0553103540', 0)
 insert into inventory (location_id, book_isbn, quantity) values (6, '978-1617294563', 665)
+
+select * from customer;

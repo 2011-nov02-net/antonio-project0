@@ -30,13 +30,6 @@ namespace StoreApplication.DataAccess
                 Quantity = (int)inventory.Quantity
             };
         }
-
-        /// <summary>
-        /// Maps a restaurant business model to an entity for Entity Framework,
-        /// including all reviews if present.
-        /// </summary>
-        /// <param name="restaurant">The restaurant business model.</param>
-        /// <returns>The restaurant entity.</returns>
         public static Entities.Location MapLocationsWithInventory(Library.Models.Location location)
         {
             return new Entities.Location
@@ -48,12 +41,14 @@ namespace StoreApplication.DataAccess
             };
         }
 
-        /// <summary>
-        /// Maps an Entity Framework review entity to a business model,
-        /// not including the restaurant.
-        /// </summary>
-        /// <param name="restaurant">The review entity.</param>
-        /// <returns>The review business model.</returns>
+        public static Library.Models.Location MapCustomerWithLocation(Entities.Location location)
+        {
+            return new Library.Models.Location
+            {
+                ID = location.Id,
+                LocationName = location.Name
+            };
+        }
         public static Library.Models.Location Map(Entities.Location location)
         {
             return new Library.Models.Location
@@ -64,12 +59,25 @@ namespace StoreApplication.DataAccess
             };
         }
 
-        /// <summary>
-        /// Maps a review business model to an entity for Entity Framework,
-        /// not including the restaurant.
-        /// </summary>
-        /// <param name="review">The review business model.</param>
-        /// <returns>The review entity.</returns>
+        public static Library.Models.Customer Map(Entities.Customer customer)
+        {
+            return new Library.Models.Customer
+            {
+                FirstName = customer.FirstName,
+                ID = customer.Id,
+                LastName = customer.LastName,
+                MyStoreLocation = MapLocationToCustomer(customer.Location)
+            };
+        }
+
+        public static Library.Models.Location MapLocationToCustomer(Entities.Location location)
+        {
+            return new Library.Models.Location
+            {
+                ID = location.Id,
+                LocationName = location.Name
+            };
+        }
         public static Entities.Location Map(Library.Models.Location location)
         {
             return new Entities.Location
@@ -81,5 +89,41 @@ namespace StoreApplication.DataAccess
             };
         }
         
+        /// <summary>
+        /// Maps a customer business model to an entity for Entity Framework
+        /// </summary>
+        public static Entities.Customer Map(Library.Models.Customer customer)
+        {
+            return new Entities.Customer
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Id = customer.ID,
+                LocationId = customer.MyStoreLocation.ID
+            };
+        }
+
+        public static Entities.Order Map(Library.Models.Order orders)
+        {
+            return new Entities.Order
+            {
+                OrderDate = orders.TimeStamp,
+                CustomerId = orders.Customer.ID,
+                LocationId = orders.Customer.MyStoreLocation.ID,
+                Id = orders.OrderNumber,
+                Orderlines = orders.Purchase.Select(Map).ToList()
+            };
+        }
+
+        public static Entities.Orderline Map(Library.Models.OrderLine orderLine)
+        {
+            return new Entities.Orderline
+            {
+                BookIsbn = orderLine.BookISBN,
+                Id = orderLine.ID,
+                OrderId = orderLine.OrderNumber,
+                Quantity = orderLine.Quantity
+            };
+        }
     }
 }

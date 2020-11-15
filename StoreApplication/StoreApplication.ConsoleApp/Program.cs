@@ -31,108 +31,9 @@ namespace StoreApplication.ConsoleApp
 
             IStoreRepository storeRepository = dependencies.CreateStoreRepository();
 
-            //DisplayAllLocations(storeRepository);
-            Console.WriteLine(storeRepository.FindCustomerByName("Darko").ToString());
 
-            /*
-            // Begin the app loop to collect input
-            string menuOption = "";
-            string response;
 
-            // Display Options
-            Console.WriteLine(menu);
-            while (menuOption != "q")
-            {
-                // Collect Input
-                menuOption = Console.ReadLine();
-                if (IsValidMainMenuSelection(menuOption, out response))
-                {
-                    string input = "";
-                    switch (menuOption)
-                    {
-                        case "p":
-                            Console.WriteLine("You have selected [Place an order for an existing customer]. Please enter the customer name you want to place the order for:");
-                            // Collect Input until user gives a valid customer name
-                            input = Console.ReadLine();
-                            Customer customer;
-                            while(!StoreManager.FindCustomerByName(input, out response, out customer))
-                            {
-                                Console.WriteLine(response);
-                                input = Console.ReadLine();
-                            }
-                            Console.WriteLine(customer);
-                            // Create the new Order
-                            Order newOrder = new Order(customer.MyStoreLocation, customer);
-
-                            Console.WriteLine("Please enter the name of the product and the quantity, separated by a comma.");
-                            // Collect line items until customer prompts finish order
-                            while (!StoreManager.AttemptToPlaceOrder(customer, newOrder, out response))
-                            {
-                                // Create new line item
-                                input = Console.ReadLine();
-
-                                while (StoreManager.CreateLineItem(input, newOrder) && input != "d")
-                                {
-                                    input = Console.ReadLine();
-                                }
-                            }
-                            break;
-                        case "a":
-                            Console.WriteLine("You Have selected [Add New Customer]."+"\nPlease enter the name of the first and last name of the customer separated by a space:");
-                            input = Console.ReadLine();
-                            while (!StoreManager.CreateNewCustomer(input, 0, out response))
-                            {
-                                Console.WriteLine(response);
-                                input = Console.ReadLine();
-                            }
-                            break;
-                        case "sc":
-                            Console.WriteLine("You Have selected [Search By Customer Name]."+"\nPlease enter the full name of the customer:");
-                            input = Console.ReadLine();
-                            Customer customer2;
-                            while(!StoreManager.FindCustomerByName(input, out response, out customer2))
-                            {
-                                Console.WriteLine(response);
-                                input = Console.ReadLine();
-                            }
-                            break;
-                        case "ddo":
-                            Console.WriteLine("You Have selected [Display Details of an Order]."+"\nPlease enter the order number:");
-                            input = Console.ReadLine();
-                            break;
-                        case "dhl":
-                            Console.WriteLine("You Have selected [Display Order History of Location]."+"\nPlease enter the location ID:");
-                            break;
-                        case "dhc":
-                            Console.WriteLine("You Have selected [Display Order History of Customer]."+"Please enter the customer name:");
-                            Customer found;
-                            while (!StoreManager.FindCustomerByName(input, out response, out found))
-                            {
-                                Console.WriteLine(response);
-                                input = Console.ReadLine();
-                            }
-                            Console.WriteLine(found.GetOrderHistroy());
-                            break;
-                        case "s":
-                            Console.WriteLine("You Have selected [Save Changes].");
-                            break;
-                        case "help":
-                            Console.WriteLine(menu);
-                            break;
-                        case "q":
-                            Console.WriteLine("You Have selected [Quit].");
-                            break;
-                    }
-                    Console.WriteLine(response);
-                }
-                else
-                {
-                    Console.WriteLine(response);
-                }
-            }
-
-            // Save data to file
-            */
+            RunMenuSelection(storeRepository);
         }
 
         public static void DisplayAllLocations(IStoreRepository storeRepository)
@@ -151,6 +52,82 @@ namespace StoreApplication.ConsoleApp
 
         private static readonly string[] _mainMenuSelections = { "p", "a", "sc", "ddo", "dhl", "dhc", "s", "q", "help" };
         private static Regex alphanumeric = new Regex("^[a-zA-Z0-9]*$");
+
+        public static void RunMenuSelection(IStoreRepository storeRepository)
+        {
+            // Begin the app loop to collect input
+            string menuOption = "";
+            string response;
+
+            // Display Options
+            Console.WriteLine(menu);
+            while (menuOption != "q")
+            {
+                // Collect Input
+                menuOption = Console.ReadLine();
+                if (IsValidMainMenuSelection(menuOption, out response))
+                {
+                    string input = "";
+                    switch (menuOption)
+                    {
+                        case "p":
+                            Console.WriteLine("You have selected [Place an order for an existing customer]. Please enter the customer name you want to place the order for:");
+                            break;
+                        case "a":
+                            Console.WriteLine("You Have selected [Add New Customer]." + "\nPlease enter the name of the first and last name of the customer separated by a space:");
+                            input = Console.ReadLine();
+
+                            if(InputValidation.IsValidCustomerName(input, out response))
+                            {
+                                string[] names = input.Split(' ');
+                                Customer newCustomer = new Customer();
+                                try
+                                {
+                                    newCustomer.FirstName = names[0];
+                                    newCustomer.LastName = names[1];
+                                    newCustomer.MyStoreLocation = null;
+                                }
+                                catch (ArgumentException ex)
+                                {
+                                    s_logger.Info(ex);
+                                    Console.WriteLine(ex.Message);
+                                }
+
+                                storeRepository.AddACustomer(newCustomer);
+                                storeRepository.Save();
+                            }
+                            break;
+                        case "sc":
+                            input = Console.ReadLine();
+                            Console.WriteLine("You Have selected [Search By Customer Name]." + "\nPlease enter the full name of the customer:");
+
+                            //DisplayAllLocations(storeRepository);
+                            Console.WriteLine(storeRepository.FindCustomerByName(input).ToString());
+                            break;
+                        case "ddo":
+                            Console.WriteLine("You Have selected [Display Details of an Order]." + "\nPlease enter the order number:");
+                            input = Console.ReadLine();
+                            Console.WriteLine(storeRepository.GetDetailsForOrder(Int32.Parse(input)));
+                            break;
+                        case "dhl":
+                            Console.WriteLine("You Have selected [Display Order History of Location]." + "\nPlease enter the location ID:");
+                            break;
+                        case "dhc":
+                            Console.WriteLine("You Have selected [Display Order History of Customer]." + "Please enter the customer name:");
+                            break;
+                        case "s":
+                            Console.WriteLine("You Have selected [Save Changes].");
+                            break;
+                        case "help":
+                            Console.WriteLine(menu);
+                            break;
+                        case "q":
+                            Console.WriteLine("You Have selected [Quit].");
+                            break;
+                    }
+                }
+            }
+        }
 
         public static bool IsValidMainMenuSelection(string candidate, out string message)
         {

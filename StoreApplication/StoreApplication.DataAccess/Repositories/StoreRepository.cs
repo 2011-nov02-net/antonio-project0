@@ -50,10 +50,11 @@ namespace StoreApplication.DataAccess.Repositories
             }
 
             s_logger.Info($"Adding Customer: {customer}");
-            Customer entity = Mapper.Map(customer);
+            Customer entity = new Customer();
+            entity.FirstName = customer.FirstName;
+            entity.LastName = customer.LastName;
             entity.Id = 0;
             _context.Add(entity);
-            Save();
         }
 
         public Library.Models.Customer FindCustomerByName(string search)
@@ -64,9 +65,25 @@ namespace StoreApplication.DataAccess.Repositories
             return Mapper.Map(_context.Customers.Find(dbCustomer.Id));
         }
 
-        public string GetDetailsForOrder(int ordernumber)
+        public Library.Models.Order GetDetailsForOrder(int ordernumber)
         {
-            throw new NotImplementedException();
+            Order dbOrder = _context.Orders
+                .Include(ol => ol.Orderlines)
+                .Include(c => c.Customer)
+                .First(o => o.Id == ordernumber);
+            Library.Models.Order o = new Library.Models.Order();
+            o.OrderNumber = dbOrder.Id;
+            o.Customer = FindCustomerByName(dbOrder.Customer.FirstName);
+            foreach(Orderline orli in dbOrder.Orderlines)
+            {
+                Library.Models.OrderLine toadd = new Library.Models.OrderLine();
+                toadd.BookISBN = orli.BookIsbn;
+                toadd.ID = orli.Id;
+                toadd.Quantity = orli.Quantity;
+                toadd.OrderNumber = orli.Order.Id;
+                o.Purchase.Add(toadd);
+            }
+            return o;
         }
 
         public string GetOrderHistoryByLocation(Library.Models.Location location)

@@ -9,8 +9,7 @@ namespace StoreApplication.Library.Models
         public string LastName { get; set; }
         public string Name { get => FirstName + " " + LastName; }
         public int ID { get; set; }
-
-        public Location MyStoreLocation;
+        public virtual Location MyStoreLocation { get; set; }
 
         public override string ToString()
         {

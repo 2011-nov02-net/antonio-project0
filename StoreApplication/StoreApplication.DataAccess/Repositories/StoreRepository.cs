@@ -40,8 +40,9 @@ namespace StoreApplication.DataAccess.Repositories
         }
 
         /// <summary>
-        /// Add a new Customer. 
+        /// Add a new Customer from Models to Database.
         /// </summary>
+        /// <param name="customer"> This is the new Model to be put into the database. It only has a firstname and last name.</param>
         public void AddACustomer(Library.Models.Customer customer)
         {
             if(customer.ID != 0)
@@ -50,11 +51,23 @@ namespace StoreApplication.DataAccess.Repositories
             }
 
             s_logger.Info($"Adding Customer: {customer}");
+
+            // Create the Entity item to be put into the database
             Customer entity = new Customer();
             entity.FirstName = customer.FirstName;
             entity.LastName = customer.LastName;
             entity.Id = 0;
             _context.Add(entity);
+        }
+
+
+
+        public Order Map(Library.Models.Order order)
+        {
+            return new Order {
+                Id = order.OrderNumber,
+                s
+            };
         }
 
         public Library.Models.Customer FindCustomerByName(string search)
@@ -65,15 +78,20 @@ namespace StoreApplication.DataAccess.Repositories
             return Mapper.Map(_context.Customers.Find(dbCustomer.Id));
         }
 
-        public Library.Models.Order GetDetailsForOrder(int ordernumber)
+        public string GetDetailsForOrder(int ordernumber)
         {
             Order dbOrder = _context.Orders
                 .Include(ol => ol.Orderlines)
                 .Include(c => c.Customer)
+                .Include(l => l.Location)
                 .First(o => o.Id == ordernumber);
             Library.Models.Order o = new Library.Models.Order();
+
             o.OrderNumber = dbOrder.Id;
-            o.Customer = FindCustomerByName(dbOrder.Customer.FirstName);
+            Library.Models.Customer customer = FindCustomerByName(dbOrder.Customer.FirstName);
+            Library.Models.Location locationPlaced = Map(dbOrder.Location);
+
+            o.Purchase = new List<Library.Models.OrderLine>();
             foreach(Orderline orli in dbOrder.Orderlines)
             {
                 Library.Models.OrderLine toadd = new Library.Models.OrderLine();
@@ -83,7 +101,28 @@ namespace StoreApplication.DataAccess.Repositories
                 toadd.OrderNumber = orli.Order.Id;
                 o.Purchase.Add(toadd);
             }
-            return o;
+            return $"{o}\n{customer}\t{locationPlaced}";
+        }
+
+        public Library.Models.Location Map(Entities.Location location)
+        {
+            List<Library.Models.Stock> m_stocks = new List<Library.Models.Stock>();
+            List<Library.Models.Order> m_orders = new List<Library.Models.Order>();
+            foreach(Inventory i in location.Inventories)
+            {
+                Library.Models.Stock m_stock = new Library.Models.Stock();
+                Library.Models.Book m_book = new Library.Models.Book();
+                m_book.ISBN = i.BookIsbn;
+                m_stock.Book = m_book;
+                m_stock.Quantity = (int) i.Quantity;
+            }
+            return new Library.Models.Location
+            {
+                LocationName = location.Name,
+                ID = location.Id,
+                Inventory = m_stocks,
+                OrderHistory = m_orders
+            };
         }
 
         public string GetOrderHistoryByLocation(Library.Models.Location location)

@@ -80,12 +80,11 @@ namespace StoreApplication.ConsoleApp
                             if(InputValidation.IsValidCustomerName(input, out response))
                             {
                                 string[] names = input.Split(' ');
-                                Customer newCustomer = new Customer();
+                                var newCustomer = new Customer();
                                 try
                                 {
                                     newCustomer.FirstName = names[0];
                                     newCustomer.LastName = names[1];
-                                    newCustomer.MyStoreLocation = null;
                                 }
                                 catch (ArgumentException ex)
                                 {
@@ -98,10 +97,9 @@ namespace StoreApplication.ConsoleApp
                             }
                             break;
                         case "sc":
-                            input = Console.ReadLine();
                             Console.WriteLine("You Have selected [Search By Customer Name]." + "\nPlease enter the full name of the customer:");
 
-                            //DisplayAllLocations(storeRepository);
+                            input = Console.ReadLine(); ;
                             Console.WriteLine(storeRepository.FindCustomerByName(input).ToString());
                             break;
                         case "ddo":

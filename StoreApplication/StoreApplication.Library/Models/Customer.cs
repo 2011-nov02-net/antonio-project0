@@ -10,6 +10,7 @@ namespace StoreApplication.Library.Models
         public string Name { get => FirstName + " " + LastName; }
         public int ID { get; set; }
         public virtual Location MyStoreLocation { get; set; }
+        public List<Order> Orders { get; set; } = new List<Order>();
 
         public override string ToString()
         {

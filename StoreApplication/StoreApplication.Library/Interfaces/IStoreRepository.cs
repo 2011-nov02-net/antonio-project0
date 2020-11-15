@@ -13,7 +13,7 @@ namespace StoreApplication.Library.Interfaces
 
         void AddACustomer(Customer customer);
         Customer FindCustomerByName(string search);
-        Order GetDetailsForOrder(int ordernumber);
+        string GetDetailsForOrder(int ordernumber);
         string GetOrderHistoryByLocation(Location location);
         string GetOrderHistoryByCustomer(Customer customer);
         void Save();

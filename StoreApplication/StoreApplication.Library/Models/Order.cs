@@ -8,18 +8,22 @@ namespace StoreApplication.Library.Models
     public class Order
     {
         public Location LocationPlaced { get; set; }
-
+        public Customer CustomerPlaced { get; set; }
         public List<OrderLine> Purchase { get; set; }
 
         public DateTime TimeStamp { get; set; }
-
-        public Customer Customer { get; set; }
 
         public int OrderNumber { get; set; }
 
         public override string ToString()
         {
-            return $"Order Number: {OrderNumber}\t{Customer}";
+            string result =  $"Order Number: {OrderNumber}\nOrder Date: {TimeStamp}\nItems:";
+            foreach(OrderLine ol in Purchase)
+            {
+                result += $"\n\t{ol}";
+            }
+
+            return result;
         }
 
     }

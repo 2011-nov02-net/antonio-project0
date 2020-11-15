@@ -12,10 +12,10 @@ namespace StoreApplication.Library.Interfaces
         IEnumerable<Location> GetAllLocations(string search = null);
 
         void AddACustomer(Customer customer);
-        Customer FindCustomerByName(string search);
+        Customer FindCustomerByName(string[] search);
         string GetDetailsForOrder(int ordernumber);
-        string GetOrderHistoryByLocation(Location location);
-        string GetOrderHistoryByCustomer(Customer customer);
+        string GetOrderHistoryByLocationID(int locationID);
+        string GetOrderHistoryByCustomer(string customerName);
         void Save();
 
     }

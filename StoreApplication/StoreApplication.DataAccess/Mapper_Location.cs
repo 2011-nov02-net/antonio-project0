@@ -14,15 +14,13 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="location">The location model.</param>
         /// <returns new Entity.Location></returns>
-        public static Entities.Location Map(Library.Models.Location location)
+        public static Entities.Location MapLocationWithOrders(Library.Models.Location location)
         {
             return new Entities.Location
             {
                 Id = location.ID,
                 Name = location.LocationName,
-                Orders = location.OrderHistory.Select(Mapper_Order.Map).ToList(),
-                Inventories = location.Inventory.Select(Mapper_Inventory.Map).ToList(),
-                Customers = location.Customers.Select(Mapper_Customer.Map).ToList(),
+                Orders = location.OrderHistory.Select(Mapper_Order.MapOrderWithOrderLines).ToList()
             };
         }
 
@@ -31,15 +29,30 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="customer">The customer entity.</param>
         /// <returns></returns>
-        public static Library.Models.Location Map(Entities.Location location)
+        public static Library.Models.Location MapLocationWithOrders(Entities.Location location)
         {
             return new Library.Models.Location
             {
                 ID = location.Id,
                 LocationName = location.Name,
-                OrderHistory = location.Orders.Select(Mapper_Order.Map).ToList(),
-                Inventory = location.Inventories.Select(Mapper_Inventory.Map).ToList(),
-                Customers = location.Customers.Select(Mapper_Customer.Map).ToList()
+                OrderHistory = location.Orders.Select(Mapper_Order.MapOrderWithOrderLines).ToList()
+            };
+        }
+
+        public static Entities.Location Map(Library.Models.Location location)
+        {
+            return new Entities.Location
+            {
+                Id = location.ID,
+                Name = location.LocationName
+            };
+        }
+        public static Library.Models.Location Map(Entities.Location location)
+        {
+            return new Library.Models.Location
+            {
+                ID = location.Id,
+                LocationName = location.Name
             };
         }
     }

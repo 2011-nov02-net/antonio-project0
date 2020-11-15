@@ -28,11 +28,8 @@ namespace StoreApplication.ConsoleApp
             using var dependencies = new Dependencies();
             XmlSerializer serializer = dependencies.CreateXmlSerializer();
 
-
             IStoreRepository storeRepository = dependencies.CreateStoreRepository();
-
-            DisplayAllLocations(storeRepository);
-
+            
             RunMenuSelection(storeRepository);
         }
 
@@ -99,8 +96,20 @@ namespace StoreApplication.ConsoleApp
                         case "sc":
                             Console.WriteLine("You Have selected [Search By Customer Name]." + "\nPlease enter the full name of the customer:");
 
-                            input = Console.ReadLine(); ;
-                            Console.WriteLine(storeRepository.FindCustomerByName(input).ToString());
+                            input = Console.ReadLine();
+                            string[] candidate = input.Split(' ');
+                            var a = new Customer();
+                            try
+                            {
+                                a.FirstName = candidate[0];
+                                a.LastName = candidate[1];
+                            }
+                            catch (ArgumentException ex)
+                            {
+                                s_logger.Info(ex);
+                                Console.WriteLine(ex.Message);
+                            }
+                            Console.WriteLine(storeRepository.FindCustomerByName(candidate).ToString());
                             break;
                         case "ddo":
                             Console.WriteLine("You Have selected [Display Details of an Order]." + "\nPlease enter the order number:");
@@ -109,9 +118,15 @@ namespace StoreApplication.ConsoleApp
                             break;
                         case "dhl":
                             Console.WriteLine("You Have selected [Display Order History of Location]." + "\nPlease enter the location ID:");
+                            input = Console.ReadLine();
+
+                            Console.WriteLine(storeRepository.GetOrderHistoryByLocationID(Int32.Parse(input)));
                             break;
                         case "dhc":
                             Console.WriteLine("You Have selected [Display Order History of Customer]." + "Please enter the customer name:");
+                            input = Console.ReadLine();
+
+                            Console.Write(storeRepository.GetOrderHistoryByCustomer(input));
                             break;
                         case "s":
                             Console.WriteLine("You Have selected [Save Changes].");

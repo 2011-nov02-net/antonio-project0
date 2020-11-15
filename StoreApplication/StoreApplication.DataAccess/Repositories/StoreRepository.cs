@@ -12,7 +12,7 @@ namespace StoreApplication.DataAccess.Repositories
 {
     public class StoreRepository : IStoreRepository
     {
-        private readonly StoreContext  _context;
+        private readonly StoreContext _context;
         private static readonly ILogger s_logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace StoreApplication.DataAccess.Repositories
         {
             IQueryable<Location> dbLocations = _context.Locations;
 
-            if(search != null)
+            if (search != null)
             {
                 dbLocations = dbLocations.Where(i => i.Name.Contains(search));
             }
@@ -44,7 +44,7 @@ namespace StoreApplication.DataAccess.Repositories
         /// <param name="customer"> This is the new Model to be put into the database. It only has a firstname and last name.</param>
         public void AddACustomer(Library.Models.Customer customer)
         {
-            if(customer.ID != 0)
+            if (customer.ID != 0)
             {
                 s_logger.Warn($"Customer to be added has an ID ({customer.ID}) already: ignoring.");
             }
@@ -59,11 +59,12 @@ namespace StoreApplication.DataAccess.Repositories
             _context.Add(entity);
         }
 
-        public Library.Models.Customer FindCustomerByName(string search)
+        public Library.Models.Customer FindCustomerByName(string[] search)
         {
             Customer dbCustomer = _context.Customers
                 .Include(l => l.Location)
-                .First(c => c.FirstName == "Antonio");
+                .First(c => c.FirstName == search[0] && c.LastName == search[1]);
+
             return Mapper_Customer.Map(_context.Customers.Find(dbCustomer.Id));
         }
 
@@ -77,11 +78,12 @@ namespace StoreApplication.DataAccess.Repositories
             Library.Models.Order o = new Library.Models.Order();
 
             o.OrderNumber = dbOrder.Id;
-            Library.Models.Customer customer = FindCustomerByName(dbOrder.Customer.FirstName);
-            Library.Models.Location locationPlaced = Map(dbOrder.Location);
+            string[] names = { dbOrder.Customer.FirstName, dbOrder.Customer.LastName };
+            Library.Models.Customer customer = FindCustomerByName(names);
+            Library.Models.Location locationPlaced = Mapper_Location.Map(dbOrder.Location);
 
             o.Purchase = new List<Library.Models.OrderLine>();
-            foreach(Orderline orli in dbOrder.Orderlines)
+            foreach (Orderline orli in dbOrder.Orderlines)
             {
                 Library.Models.OrderLine toadd = new Library.Models.OrderLine();
                 toadd.BookISBN = orli.BookIsbn;
@@ -93,33 +95,23 @@ namespace StoreApplication.DataAccess.Repositories
             return $"{o}\n{customer}\t{locationPlaced}";
         }
 
-        public Library.Models.Location Map(Entities.Location location)
+        public string GetOrderHistoryByLocationID(int locationID)
         {
-            List<Library.Models.Stock> m_stocks = new List<Library.Models.Stock>();
-            List<Library.Models.Order> m_orders = new List<Library.Models.Order>();
-            foreach(Inventory i in location.Inventories)
+            string results = "";
+            Location dbLocation = _context.Locations
+                .Include(o => o.Orders)
+                .ThenInclude(ol => ol.Orderlines)
+                .First(l => l.Id == locationID);
+            Library.Models.Location m_location = Mapper_Location.MapLocationWithOrders(dbLocation);
+            results += m_location;
+            foreach(Library.Models.Order order in m_location.OrderHistory)
             {
-                Library.Models.Stock m_stock = new Library.Models.Stock();
-                Library.Models.Book m_book = new Library.Models.Book();
-                m_book.ISBN = i.BookIsbn;
-                m_stock.Book = m_book;
-                m_stock.Quantity = (int) i.Quantity;
+                results += $"\n\t{order}";
             }
-            return new Library.Models.Location
-            {
-                LocationName = location.Name,
-                ID = location.Id,
-                Inventory = m_stocks,
-                OrderHistory = m_orders
-            };
+            return results;
         }
 
-        public string GetOrderHistoryByLocation(Library.Models.Location location)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetOrderHistoryByCustomer(Library.Models.Customer customer)
+        public string GetOrderHistoryByCustomer(string customerName)
         {
             throw new NotImplementedException();
         }

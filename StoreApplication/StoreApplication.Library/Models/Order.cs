@@ -9,7 +9,7 @@ namespace StoreApplication.Library.Models
     {
         public Location LocationPlaced { get; set; }
         public Customer CustomerPlaced { get; set; }
-        public List<OrderLine> Purchase { get; set; }
+        public List<OrderLine> Purchase { get; set; } = new List<OrderLine>();
 
         public DateTime TimeStamp { get; set; }
 

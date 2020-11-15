@@ -111,4 +111,15 @@ insert into inventory (location_id, book_isbn, quantity) values (6, '978-1640320
 insert into inventory (location_id, book_isbn, quantity) values (6, '978-0553103540', 0)
 insert into inventory (location_id, book_isbn, quantity) values (6, '978-1617294563', 665)
 
-select * from customer;
+insert into orders (customer_id, location_id) values (1,1);
+insert into orders (customer_id, location_id) values (2,1);
+
+insert into orderline(order_id, book_isbn, quantity) values (1, '978-0525948926',1)
+insert into orderline(order_id, book_isbn, quantity) values (1, '978-0452286757',1)
+insert into orderline(order_id, book_isbn, quantity) values (1, '978-1640320437',1)
+
+
+insert into orderline(order_id, book_isbn, quantity) values (2, '978-0553103540',1)
+insert into orderline(order_id, book_isbn, quantity) values (2, '978-1617294563',23)
+
+select * from orders;

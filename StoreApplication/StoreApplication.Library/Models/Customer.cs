@@ -14,7 +14,7 @@ namespace StoreApplication.Library.Models
 
         public override string ToString()
         {
-            return $"\tID: {ID}\tName: {Name}\tMy Store: {MyStoreLocation}";
+            return $"ID: {ID}\tName: {Name}\t";
         }
     }
 }

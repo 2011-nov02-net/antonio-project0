@@ -8,6 +8,17 @@ namespace StoreApplication.DataAccess
 {
     public static class Mapper_Customer
     {
+        public static Entities.Customer MapCustomerWithLocation(Library.Models.Customer customer)
+        {
+            return new Entities.Customer
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Id = customer.ID,
+                Location = Mapper_Location.Map(customer.MyStoreLocation)
+            };
+        }
+
         /// <summary>
         /// This turns a customer Model into a customer entity, by assigning each relavent property
         /// to a column in the customer table
@@ -21,9 +32,7 @@ namespace StoreApplication.DataAccess
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
                 Id = customer.ID,
-                LocationId = customer.MyStoreLocation.ID,
-                Orders = customer.Orders.Select(Mapper_Order.Map).ToList(),
-                Location = Mapper_Location.Map(customer.MyStoreLocation)
+                LocationId = customer.MyStoreLocation.ID
             };
         }
 
@@ -38,9 +47,7 @@ namespace StoreApplication.DataAccess
             {
                 ID = customer.Id,
                 FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                MyStoreLocation = Mapper_Location.Map(customer.Location),
-                Orders = customer.Orders.Select(Mapper_Order.Map).ToList()
+                LastName = customer.LastName
             };
         }
 

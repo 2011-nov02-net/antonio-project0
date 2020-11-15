@@ -19,18 +19,11 @@ namespace StoreApplication.Library.Models
 
         public static List<Order> OrderHistory { get; }
 
-        public Order(Location location, Customer customer)
-        {
-            LocationPlaced = location;
-            TimeStamp = DateTime.UtcNow;
-            Customer = customer;
-        }
-
         public bool AddNewOrderLine(string ISBNAndQuantity)
         {
             string[] lineFiltered = SplitString(ISBNAndQuantity);
-            var newOrderLine = new OrderLine(lineFiltered[0], Int32.Parse(lineFiltered[1]));
-            Purchase.Add(newOrderLine);
+            //var newOrderLine;//new OrderLine(lineFiltered[0], Int32.Parse(lineFiltered[1]));
+            //Purchase.Add(newOrderLine);
             return true;
         }
 

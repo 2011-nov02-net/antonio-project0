@@ -10,16 +10,8 @@ namespace StoreApplication.Library.Models
         public string LocationName { get; set; }
 
         public static List<Location> Locations = new List<Location>();
-        public static List<Order> OrderHistory = new List<Order>();
-        public HashSet<Stock> Inventory = new HashSet<Stock>();
-
-        public Location(int id, string name, HashSet<Stock> inventory)
-        {
-            ID = id;
-            LocationName = name;
-            Inventory = inventory;
-            Locations.Add(this);
-        }
+        public List<Order> OrderHistory { get; set; } = new List<Order>();
+        public List<Stock> Inventory { get; set; } = new List<Stock>();
 
         public bool AttemptOrderAtLocation(Order newOrder, out string message)
         {

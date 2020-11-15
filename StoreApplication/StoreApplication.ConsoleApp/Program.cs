@@ -1,13 +1,19 @@
 ﻿using StoreApplication.Library;
 using StoreApplication.Library.Models;
+using StoreApplication.Library.Interfaces;
 using System;
 using System.Text.RegularExpressions;
-
+using NLog;
+using System.Xml.Serialization;
+using System.Linq;
 
 namespace StoreApplication.ConsoleApp
 {
     class Program
     {
+
+        private static readonly ILogger s_logger = LogManager.GetCurrentClassLogger();
+
         public static string menu = "Welcome to your Book Store Management System:\n" 
                 + "[p]\tPlace an order for a customer\n[a]\tAdd a new Customer" + "\n[sc]\tSearch for a customer by name" + "\n[ddo]\tDisplay details of an order"
                 + "\n[dhl]\tDisplay all order history of a store location" + "\n[dhc]\tDisplay all order history of a customer"
@@ -20,7 +26,21 @@ namespace StoreApplication.ConsoleApp
         {
             // Load data
             using var dependencies = new Dependencies();
+            XmlSerializer serializer = dependencies.CreateXmlSerializer();
 
+            IStoreRepository storeRepository = dependencies.CreateStoreRepository();
+
+            var locations = storeRepository.GetAllLocations().ToList();
+            foreach(Location i in locations)
+            {
+                Console.WriteLine($"ID: {i.ID}\tLocation Name: {i.LocationName}");
+                foreach(Stock s in i.Inventory)
+                {
+                    Console.WriteLine($"{s.Book.ISBN}\t{s.Quantity}");
+                }
+            }
+
+            /*
             // Begin the app loop to collect input
             string menuOption = "";
             string response;
@@ -118,6 +138,7 @@ namespace StoreApplication.ConsoleApp
             }
 
             // Save data to file
+            */
         }
 
         private static readonly string[] _mainMenuSelections = { "p", "a", "sc", "ddo", "dhl", "dhc", "s", "q", "help" };

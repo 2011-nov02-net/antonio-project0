@@ -11,12 +11,6 @@ namespace StoreApplication.Library.Models
         public Book Book { get; set; }
         public int Quantity { get; set; }
 
-        public Stock(Book book, int quantity)
-        {
-            Book = book;
-            Quantity = quantity;
-        }
-
         public void AdjustStock(int amount)
         {
             Quantity += amount;

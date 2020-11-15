@@ -31,9 +31,9 @@ namespace StoreApplication.Library
                 string[] names = newCustomerName.Split(' ');
 
                 // If Valid name
-                Customer newCustomer = new Customer(names[0], names[1], id);
-                Customer.Customers.Add(newCustomer);
-                validCheckerResponse = $"Success! New Customer [{newCustomer.Name}] with ID [{newCustomer.ID}] has been added.";
+                //Customer newCustomer = new Customer(names[0], names[1], id);
+               // Customer.Customers.Add(newCustomer);
+                //validCheckerResponse = $"Success! New Customer [{newCustomer.Name}] with ID [{newCustomer.ID}] has been added.";
                 message = validCheckerResponse;
                 return true;
             }

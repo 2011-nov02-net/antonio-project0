@@ -13,22 +13,6 @@ namespace StoreApplication.Library.Models
         public static List<Customer> Customers = new List<Customer>();
         public List<Order> OrderHistory = new List<Order>();
 
-        public Customer(string firstname, string lastname, int id)
-        {
-            FirstName = firstname;
-            LastName = lastname;
-            MyStoreLocation = null;
-            ID = id;
-        }
-        public Customer(string firstname, string lastname, Location location, int id)
-        {
-            FirstName = firstname;
-            LastName = lastname;
-            MyStoreLocation = location;
-            ID = id;
-            Customers.Add(this);
-        }
-
         public static Customer FindCustomerByName(string validCandidate)
         {
             return Customers.Find(c => c.Name == validCandidate);

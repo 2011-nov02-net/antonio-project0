@@ -13,13 +13,5 @@ namespace StoreApplication.Library.Models
         public decimal Price { get; set; }
         public static List<Book> Library { get; set; }
 
-        public Book(string isbn, string authorLastName, string authorFirstName, decimal price)
-        {
-            ISBN = isbn;
-            AuthorFirstName = authorFirstName;
-            AuthorLastName = authorLastName;
-            Price = price;
-            Library.Add(this);
-        }
     }
 }

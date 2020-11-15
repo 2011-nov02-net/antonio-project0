@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Logging;
-using StoreApplication.DataAccess;
+using StoreApplication.DataAccess.Entities;
+using StoreApplication.Library.Interfaces;
+using StoreApplication.DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace StoreApplication.ConsoleApp
 {
@@ -19,19 +22,26 @@ namespace StoreApplication.ConsoleApp
 
         public StoreContext CreateDbContext(string[] args = null)
         {
-            using var logStream = new StreamWriter("logs.txt");
+            //using var logStream = new StreamWriter("logs.txt");
 
             var optionsBuilder = new DbContextOptionsBuilder<StoreContext>();
             optionsBuilder.UseSqlServer(GetConnectionString());
+            //optionsBuilder.LogTo(logStream.WriteLine);
 
-            optionsBuilder.LogTo(logStream.WriteLine, LogLevel.Information);
             return new StoreContext(optionsBuilder.Options);
 
         }
 
+        public IStoreRepository CreateStoreRepository()
+        {
+            var dbContext = CreateDbContext();
+            _disposables.Add(dbContext);
+            return new StoreRepository(dbContext);
+        }
+
         static string GetConnectionString()
         {
-            string path = "../../../../../../../connection_string.json";
+            string path = "../../../../connection_string.json";
             string json;
             try
             {
@@ -39,12 +49,18 @@ namespace StoreApplication.ConsoleApp
             }
             catch (IOException)
             {
-                Console.WriteLine($"required file {path} not found. should just be the connection string in quotes.");
+                Console.WriteLine($"Required file {path} not found. Should just be the connection string in quotes.");
                 throw;
             }
             string connectionString = JsonSerializer.Deserialize<string>(json);
             return connectionString;
         }
+
+        public XmlSerializer CreateXmlSerializer()
+        {
+            return new XmlSerializer(typeof(List<Library.Models.Location>));
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)

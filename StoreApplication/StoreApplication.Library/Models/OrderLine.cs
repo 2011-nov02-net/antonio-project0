@@ -13,12 +13,6 @@ namespace StoreApplication.Library.Models
             set => TotalCost = Convert.ToDecimal(Quantity * Book.Library.Find(b => b.ISBN == BookISBN).Price);
         }
 
-        public OrderLine(string isbn, int quantity)
-        {
-            BookISBN = isbn;
-            Quantity = quantity;
-        }
-
         public override string ToString()
         {
             return $"ISBN: {BookISBN}\tQty:{Quantity}\tCost:{TotalCost}";

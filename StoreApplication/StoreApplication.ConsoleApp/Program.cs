@@ -36,7 +36,7 @@ namespace StoreApplication.ConsoleApp
                 Console.WriteLine($"ID: {i.ID}\tLocation Name: {i.LocationName}");
                 foreach(Stock s in i.Inventory)
                 {
-                    Console.WriteLine($"{s.Book.ISBN}\t{s.Quantity}");
+                    Console.WriteLine($"\tISBN:{s.Book.ISBN}\tStock:{s.Quantity}");
                 }
             }
 

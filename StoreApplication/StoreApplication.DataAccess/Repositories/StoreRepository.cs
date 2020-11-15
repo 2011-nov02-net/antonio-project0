@@ -23,7 +23,7 @@ namespace StoreApplication.DataAccess.Repositories
         public IEnumerable<Library.Models.Location> GetAllLocations(string search = null)
         {
             IQueryable<Location> dbLocations = _context.Locations
-                .Include(i => i.Inventories).AsNoTracking();
+                .Include(i => i.Inventories);
 
             if(search != null)
             {

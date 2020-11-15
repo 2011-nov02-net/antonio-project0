@@ -17,7 +17,17 @@ namespace StoreApplication.DataAccess
             return new Library.Models.Location
             {
                 ID = location.Id,
-                LocationName = location.Name
+                LocationName = location.Name,
+                Inventory = location.Inventories.Select(Mapper.MapInventoriesWithStock).ToList()
+            };
+        }
+
+        public static Library.Models.Stock MapInventoriesWithStock(Entities.Inventory inventory)
+        {
+            return new Library.Models.Stock
+            {
+                Book = new Library.Models.Book { ISBN = inventory.BookIsbn },
+                Quantity = (int)inventory.Quantity
             };
         }
 
@@ -70,5 +80,6 @@ namespace StoreApplication.DataAccess
                 Inventories = (System.Collections.Generic.ICollection<Entities.Inventory>)location.Inventory
             };
         }
+        
     }
 }

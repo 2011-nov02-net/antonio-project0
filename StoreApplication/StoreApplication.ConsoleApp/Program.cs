@@ -31,7 +31,7 @@ namespace StoreApplication.ConsoleApp
 
             IStoreRepository storeRepository = dependencies.CreateStoreRepository();
 
-
+            DisplayAllLocations(storeRepository);
 
             RunMenuSelection(storeRepository);
         }

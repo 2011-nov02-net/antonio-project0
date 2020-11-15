@@ -29,14 +29,13 @@ namespace StoreApplication.DataAccess.Repositories
 
         public IEnumerable<Library.Models.Location> GetAllLocations(string search = null)
         {
-            IQueryable<Location> dbLocations = _context.Locations
-                .Include(i => i.Inventories);
+            IQueryable<Location> dbLocations = _context.Locations;
 
             if(search != null)
             {
                 dbLocations = dbLocations.Where(i => i.Name.Contains(search));
             }
-            return dbLocations.Select(Mapper.MapLocationsWithInventory);
+            return dbLocations.Select(Mapper_Location.Map);
         }
 
         /// <summary>
@@ -60,22 +59,12 @@ namespace StoreApplication.DataAccess.Repositories
             _context.Add(entity);
         }
 
-
-
-        public Order Map(Library.Models.Order order)
-        {
-            return new Order {
-                Id = order.OrderNumber,
-                s
-            };
-        }
-
         public Library.Models.Customer FindCustomerByName(string search)
         {
             Customer dbCustomer = _context.Customers
                 .Include(l => l.Location)
-                .First(c => c.FirstName == search);
-            return Mapper.Map(_context.Customers.Find(dbCustomer.Id));
+                .First(c => c.FirstName == "Antonio");
+            return Mapper_Customer.Map(_context.Customers.Find(dbCustomer.Id));
         }
 
         public string GetDetailsForOrder(int ordernumber)

@@ -19,6 +19,17 @@ namespace StoreApplication.DataAccess
             };
         }
 
+        public static Library.Models.Customer MapCustomerWithOrders(Entities.Customer customer)
+        {
+            return new Library.Models.Customer
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                ID = customer.Id,
+                Orders = customer.Orders.Select(Mapper_Order.MapOrderWithOrderLines).ToList()
+            };
+        }
+
         /// <summary>
         /// This turns a customer Model into a customer entity, by assigning each relavent property
         /// to a column in the customer table

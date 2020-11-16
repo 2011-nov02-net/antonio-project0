@@ -10,12 +10,13 @@ namespace StoreApplication.Library.Interfaces
     public interface IStoreRepository
     {
         IEnumerable<Location> GetAllLocations(string search = null);
+        void PlaceAnOrderForACustomer(Customer customer);
 
         void AddACustomer(Customer customer);
         Customer FindCustomerByName(string[] search);
         string GetDetailsForOrder(int ordernumber);
         string GetOrderHistoryByLocationID(int locationID);
-        string GetOrderHistoryByCustomer(string customerName);
+        string GetOrderHistoryByCustomer(string[] customerName);
         void Save();
 
     }

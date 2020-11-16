@@ -69,6 +69,8 @@ namespace StoreApplication.ConsoleApp
                     {
                         case "p":
                             Console.WriteLine("You have selected [Place an order for an existing customer]. Please enter the customer name you want to place the order for:");
+                            string name = Console.ReadLine();
+
                             break;
                         case "a":
                             Console.WriteLine("You Have selected [Add New Customer]." + "\nPlease enter the name of the first and last name of the customer separated by a space:");
@@ -90,7 +92,6 @@ namespace StoreApplication.ConsoleApp
                                 }
 
                                 storeRepository.AddACustomer(newCustomer);
-                                storeRepository.Save();
                             }
                             break;
                         case "sc":
@@ -114,22 +115,31 @@ namespace StoreApplication.ConsoleApp
                         case "ddo":
                             Console.WriteLine("You Have selected [Display Details of an Order]." + "\nPlease enter the order number:");
                             input = Console.ReadLine();
+
+                            // Do Some input validation
+
                             Console.WriteLine(storeRepository.GetDetailsForOrder(Int32.Parse(input)));
                             break;
                         case "dhl":
                             Console.WriteLine("You Have selected [Display Order History of Location]." + "\nPlease enter the location ID:");
                             input = Console.ReadLine();
 
+                            // do some input validation
+
                             Console.WriteLine(storeRepository.GetOrderHistoryByLocationID(Int32.Parse(input)));
                             break;
                         case "dhc":
                             Console.WriteLine("You Have selected [Display Order History of Customer]." + "Please enter the customer name:");
                             input = Console.ReadLine();
+                            string[] s = input.Split(' ');
+                            // do some input validation
 
-                            Console.Write(storeRepository.GetOrderHistoryByCustomer(input));
+                            Console.WriteLine(storeRepository.GetOrderHistoryByCustomer(s));
                             break;
                         case "s":
                             Console.WriteLine("You Have selected [Save Changes].");
+
+                            storeRepository.Save();
                             break;
                         case "help":
                             Console.WriteLine(menu);

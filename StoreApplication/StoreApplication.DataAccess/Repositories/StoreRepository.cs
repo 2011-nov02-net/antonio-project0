@@ -111,9 +111,20 @@ namespace StoreApplication.DataAccess.Repositories
             return results;
         }
 
-        public string GetOrderHistoryByCustomer(string customerName)
+        public string GetOrderHistoryByCustomer(string[] customerName)
         {
-            throw new NotImplementedException();
+            Customer dbCustomer = _context.Customers
+                .Include(o => o.Orders)
+                .ThenInclude(ol => ol.Orderlines)
+                .First(c => c.FirstName == customerName[0] && c.LastName == customerName[1]);
+            string result = "";
+            Library.Models.Customer m_customer = Mapper_Customer.MapCustomerWithOrders(dbCustomer);
+            result += m_customer;
+            foreach(Library.Models.Order order in m_customer.Orders)
+            {
+                result += $"\n\t{order}";
+            }
+            return result;
         }
 
         /// <summary>

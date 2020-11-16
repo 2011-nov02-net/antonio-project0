@@ -18,6 +18,31 @@ namespace StoreApplication.DataAccess
                 Location = Mapper_Location.Map(customer.MyStoreLocation)
             };
         }
+        public static Library.Models.Customer MapCustomerWithLocation(Entities.Customer customer)
+        {
+            return new Library.Models.Customer
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                ID = customer.Id,
+                MyStoreLocation = Mapper_Location.Map(customer.Location)
+            };
+        }
+
+
+        public static Entities.Customer MapFullCustomer(Library.Models.Customer customer)
+        {
+            return new Entities.Customer
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Id = customer.ID,
+                Location = Mapper_Location.Map(customer.MyStoreLocation),
+                Orders = customer.Orders.Select(Mapper_Order.MapOrderWithOrderLines).ToList(),
+                LocationId = customer.MyStoreLocation.ID
+
+            };
+        }
 
         public static Library.Models.Customer MapCustomerWithOrders(Entities.Customer customer)
         {

@@ -10,7 +10,7 @@ namespace StoreApplication.Library.Interfaces
     public interface IStoreRepository
     {
         IEnumerable<Location> GetAllLocations(string search = null);
-        void PlaceAnOrderForACustomer(Customer customer);
+        void PlaceAnOrderForACustomer();
         void AddACustomer(Customer customer);
         Customer FindCustomerByName(string[] search);
         string GetDetailsForOrder(int ordernumber);

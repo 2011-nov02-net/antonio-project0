@@ -39,6 +39,16 @@ namespace StoreApplication.DataAccess
             };
         }
 
+        public static Library.Models.Location MapLocationsWithInventory(Entities.Location location)
+        {
+            return new Library.Models.Location 
+            {
+                ID = location.Id,
+                LocationName = location.Name,
+                Inventory = location.Inventories.Select(Mapper_Inventory.Map).ToList()
+            };
+        }
+
         public static Entities.Location Map(Library.Models.Location location)
         {
             return new Entities.Location

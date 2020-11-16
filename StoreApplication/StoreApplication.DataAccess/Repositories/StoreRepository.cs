@@ -37,8 +37,18 @@ namespace StoreApplication.DataAccess.Repositories
             }
             return dbLocations.Select(Mapper_Location.Map);
         }
-        public void PlaceAnOrderForACustomer(Library.Models.Customer customer)
+        public void PlaceAnOrderForACustomer()
         {
+            IEnumerable<Book> dbBooks = _context.Books.ToList();
+            foreach (Book b in dbBooks)
+            {
+                Library.Models.Book.Library.Add(Mapper_Book.Map(b));
+            }
+
+            Customer dbCustomer = _context.Customers
+                .Include(l => l.Location)
+                .ThenInclude(i => i.Inventories)
+                .First(c => c.FirstName == "Darko");
 
         }
 
@@ -69,7 +79,7 @@ namespace StoreApplication.DataAccess.Repositories
                 .Include(l => l.Location)
                 .First(c => c.FirstName == search[0] && c.LastName == search[1]);
 
-            return Mapper_Customer.Map(_context.Customers.Find(dbCustomer.Id));
+            return Mapper_Customer.MapCustomerWithLocation(_context.Customers.Find(dbCustomer.Id));
         }
 
         public string GetDetailsForOrder(int ordernumber)

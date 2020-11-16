@@ -29,8 +29,10 @@ namespace StoreApplication.ConsoleApp
             XmlSerializer serializer = dependencies.CreateXmlSerializer();
 
             IStoreRepository storeRepository = dependencies.CreateStoreRepository();
-            
-            RunMenuSelection(storeRepository);
+
+            storeRepository.PlaceAnOrderForACustomer();
+
+            //RunMenuSelection(storeRepository);
         }
 
         public static void DisplayAllLocations(IStoreRepository storeRepository)

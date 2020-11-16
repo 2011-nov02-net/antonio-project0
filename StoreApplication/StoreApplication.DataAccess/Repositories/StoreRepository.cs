@@ -37,6 +37,10 @@ namespace StoreApplication.DataAccess.Repositories
             }
             return dbLocations.Select(Mapper_Location.Map);
         }
+        /// <summary>
+        /// The purpose of this class is to insert new a new order into the database. 
+        /// </summary>
+        /// <param name="Order">Type Library.Models.Order. It will contain all data about customer, location, and a list of orderlines.</param>
         public void PlaceAnOrderForACustomer()
         {
             IEnumerable<Book> dbBooks = _context.Books.ToList();
@@ -50,6 +54,12 @@ namespace StoreApplication.DataAccess.Repositories
                 .ThenInclude(i => i.Inventories)
                 .First(c => c.FirstName == "Darko");
 
+        }
+
+        public Library.Models.Customer GetCustomerWithLocationAndInventory(string[] name)
+        {
+            return Mapper_Customer.MapCustomerWithLocation(_context.Customers.Include(l => l.Location)
+                   .ThenInclude(i => i.Inventories).First(c=> c.FirstName == name[0] && c.LastName == name[1]));
         }
 
         /// <summary>

@@ -13,9 +13,7 @@ namespace StoreApplication.DataAccess
             return new Library.Models.OrderLine
             {
                 BookISBN = orderline.BookIsbn,
-                ID = orderline.Id,
                 Quantity = orderline.Quantity,
-                OrderNumber = orderline.OrderId,
                 LineCost = 0
             };
         }
@@ -26,8 +24,6 @@ namespace StoreApplication.DataAccess
             {
                 BookIsbn = orderline.BookISBN,
                 Quantity = orderline.Quantity,
-                Id = orderline.ID,
-                OrderId = orderline.OrderNumber
             };
         }
     }

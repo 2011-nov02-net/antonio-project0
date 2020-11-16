@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using NLog;
 using System.Xml.Serialization;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace StoreApplication.ConsoleApp
 {
@@ -32,7 +33,7 @@ namespace StoreApplication.ConsoleApp
 
             storeRepository.PlaceAnOrderForACustomer();
 
-            //RunMenuSelection(storeRepository);
+            RunMenuSelection(storeRepository);
         }
 
         public static void DisplayAllLocations(IStoreRepository storeRepository)
@@ -72,7 +73,37 @@ namespace StoreApplication.ConsoleApp
                         case "p":
                             Console.WriteLine("You have selected [Place an order for an existing customer]. Please enter the customer name you want to place the order for:");
                             string name = Console.ReadLine();
-
+                            if (InputValidation.IsValidCustomerName(name, out response))
+                            {
+                                string[] names = name.Split(' ');
+                                var newCustomer = new Customer();
+                                try
+                                {
+                                    newCustomer.FirstName = names[0];
+                                    newCustomer.LastName = names[1];
+                                }
+                                catch (ArgumentException ex)
+                                {
+                                    s_logger.Info(ex);
+                                    Console.WriteLine(ex.Message);
+                                }
+                                newCustomer = storeRepository.GetCustomerWithLocationAndInventory(names);
+                                Console.WriteLine(newCustomer);
+                                Console.WriteLine("Please enter the product name and quantity separated by a comma.\nType [done] when order is complete.");
+                                string orderlineItem = "";
+                                var order = new Order();
+                                orderlineItem = Console.ReadLine();
+                                while (orderlineItem != "done")
+                                {
+                                    order.AddNewOrderLine(orderlineItem);
+                                    orderlineItem = Console.ReadLine();
+                                }
+                                order.CustomerPlaced = newCustomer;
+                                order.LocationPlaced = newCustomer.MyStoreLocation;
+                                string s1 = "";
+                                order.LocationPlaced.AttemptOrderAtLocation(order, out s1);
+                                Console.WriteLine(s1);
+                            }
                             break;
                         case "a":
                             Console.WriteLine("You Have selected [Add New Customer]." + "\nPlease enter the name of the first and last name of the customer separated by a space:");

@@ -6,7 +6,7 @@ namespace StoreApplication.Tests
 {
     public class LocationTests
     {
-        public Location location = new Location();
+        public Library.Models.Location location = new Library.Models.Location();
 
         [Fact]
         public void AdjustingInventoryChangesInventory()

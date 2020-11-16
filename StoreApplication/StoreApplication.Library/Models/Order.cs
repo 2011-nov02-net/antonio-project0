@@ -19,8 +19,10 @@ namespace StoreApplication.Library.Models
         public bool AddNewOrderLine(string ISBNAndQuantity)
         {
             string[] lineFiltered = SplitString(ISBNAndQuantity);
-            //var newOrderLine;//new OrderLine(lineFiltered[0], Int32.Parse(lineFiltered[1]));
-            //Purchase.Add(newOrderLine);
+            var newOrderLine = new OrderLine();
+            newOrderLine.BookISBN = lineFiltered[0];
+            newOrderLine.Quantity = Int32.Parse(lineFiltered[1]);
+            Purchase.Add(newOrderLine);
             return true;
         }
 

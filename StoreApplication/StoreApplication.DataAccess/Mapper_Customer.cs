@@ -25,7 +25,7 @@ namespace StoreApplication.DataAccess
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
                 ID = customer.Id,
-                MyStoreLocation = Mapper_Location.Map(customer.Location)
+                MyStoreLocation = Mapper_Location.MapLocationsWithInventory(customer.Location)
             };
         }
 

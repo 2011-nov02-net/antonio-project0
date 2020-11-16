@@ -8,8 +8,7 @@ namespace StoreApplication.Library.Models
     {
         public string BookISBN { get; set; }
         public int Quantity { get; set; }
-        public int ID { get; set; }
-        public int OrderNumber { get; set; }
+
         private decimal _lineCost;
         public decimal LineCost
         {

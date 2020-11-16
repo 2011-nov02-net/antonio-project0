@@ -53,7 +53,7 @@ namespace StoreApplication.Library.Models
                     return false;
                 }
             }
-            message = "Could not find book";
+            message = "Could not find book in inventory.";
             return false;
         }
 

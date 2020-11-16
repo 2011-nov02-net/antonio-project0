@@ -37,6 +37,10 @@ namespace StoreApplication.DataAccess.Repositories
             }
             return dbLocations.Select(Mapper_Location.Map);
         }
+        public void PlaceAnOrderForACustomer(Library.Models.Customer customer)
+        {
+
+        }
 
         /// <summary>
         /// Add a new Customer from Models to Database.
@@ -70,33 +74,28 @@ namespace StoreApplication.DataAccess.Repositories
 
         public string GetDetailsForOrder(int ordernumber)
         {
+            IEnumerable<Book> dbBooks = _context.Books.ToList();
+            foreach (Book b in dbBooks)
+            {
+                Library.Models.Book.Library.Add(Mapper_Book.Map(b));
+            }
             Order dbOrder = _context.Orders
                 .Include(ol => ol.Orderlines)
                 .Include(c => c.Customer)
                 .Include(l => l.Location)
                 .First(o => o.Id == ordernumber);
-            Library.Models.Order o = new Library.Models.Order();
+            Library.Models.Order o = Mapper_Order.MapOrderWithLocationCustomerAndOrderLines(dbOrder);
 
-            o.OrderNumber = dbOrder.Id;
-            string[] names = { dbOrder.Customer.FirstName, dbOrder.Customer.LastName };
-            Library.Models.Customer customer = FindCustomerByName(names);
-            Library.Models.Location locationPlaced = Mapper_Location.Map(dbOrder.Location);
-
-            o.Purchase = new List<Library.Models.OrderLine>();
-            foreach (Orderline orli in dbOrder.Orderlines)
-            {
-                Library.Models.OrderLine toadd = new Library.Models.OrderLine();
-                toadd.BookISBN = orli.BookIsbn;
-                toadd.ID = orli.Id;
-                toadd.Quantity = orli.Quantity;
-                toadd.OrderNumber = orli.Order.Id;
-                o.Purchase.Add(toadd);
-            }
-            return $"{o}\n{customer}\t{locationPlaced}";
+            return $"{o}\n{o.CustomerPlaced}\t{o.LocationPlaced}";
         }
 
         public string GetOrderHistoryByLocationID(int locationID)
         {
+            IEnumerable<Book> dbBooks = _context.Books.ToList();
+            foreach (Book b in dbBooks)
+            {
+                Library.Models.Book.Library.Add(Mapper_Book.Map(b));
+            }
             string results = "";
             Location dbLocation = _context.Locations
                 .Include(o => o.Orders)
@@ -113,6 +112,11 @@ namespace StoreApplication.DataAccess.Repositories
 
         public string GetOrderHistoryByCustomer(string[] customerName)
         {
+            IEnumerable<Book> dbBooks = _context.Books.ToList();
+            foreach(Book b in dbBooks)
+            {
+                Library.Models.Book.Library.Add(Mapper_Book.Map(b));
+            }
             Customer dbCustomer = _context.Customers
                 .Include(o => o.Orders)
                 .ThenInclude(ol => ol.Orderlines)

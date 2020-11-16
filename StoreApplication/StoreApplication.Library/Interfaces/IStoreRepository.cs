@@ -11,7 +11,6 @@ namespace StoreApplication.Library.Interfaces
     {
         IEnumerable<Location> GetAllLocations(string search = null);
         void PlaceAnOrderForACustomer(Customer customer);
-
         void AddACustomer(Customer customer);
         Customer FindCustomerByName(string[] search);
         string GetDetailsForOrder(int ordernumber);

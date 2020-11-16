@@ -10,6 +10,12 @@ namespace StoreApplication.Library.Models
         public int Quantity { get; set; }
         public int ID { get; set; }
         public int OrderNumber { get; set; }
+        private decimal _lineCost;
+        public decimal LineCost
+        {
+            get { return _lineCost; }
+            set { _lineCost = Convert.ToDecimal(Quantity * Book.Library.Find(b => b.ISBN == BookISBN).Price); }
+        }
 
         public override string ToString()
         {

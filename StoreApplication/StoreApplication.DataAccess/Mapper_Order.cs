@@ -8,6 +8,17 @@ namespace StoreApplication.DataAccess
 {
     public static class Mapper_Order
     {
+        public static Library.Models.Order MapOrderWithLocationCustomerAndOrderLines(Entities.Order order)
+        {
+            return new Library.Models.Order
+            {
+                OrderNumber = order.Id,
+                Purchase = order.Orderlines.Select(Mapper_OrderLine.Map).ToList(),
+                TimeStamp = (DateTime)order.OrderDate,
+                CustomerPlaced = Mapper_Customer.Map(order.Customer),
+                LocationPlaced = Mapper_Location.Map(order.Location)
+            };
+        }
         public static Entities.Order MapOrderWithOrderLines(Library.Models.Order order)
         {
             return new Entities.Order

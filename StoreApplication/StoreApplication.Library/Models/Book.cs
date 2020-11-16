@@ -13,6 +13,8 @@ namespace StoreApplication.Library.Models
         public string AuthorFullName { get => $"{AuthorFirstName} {AuthorLastName}"; }
         public decimal Price { get; set; }
 
+        public static List<Book> Library = new List<Book>();
+
         public override string ToString()
         {
             return $"ISBN{ISBN}\tTitle: {Title}\tAuthor: {AuthorFullName}";

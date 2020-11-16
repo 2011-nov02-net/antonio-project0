@@ -15,7 +15,8 @@ namespace StoreApplication.DataAccess
                 BookISBN = orderline.BookIsbn,
                 ID = orderline.Id,
                 Quantity = orderline.Quantity,
-                OrderNumber = orderline.OrderId
+                OrderNumber = orderline.OrderId,
+                LineCost = 0
             };
         }
 

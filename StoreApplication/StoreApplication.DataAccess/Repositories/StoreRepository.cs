@@ -45,7 +45,7 @@ namespace StoreApplication.DataAccess.Repositories
         {
             // Create the Entity item to be put into the database
             Order order;
-            order = Mapper_Order.Map(m_order);
+            order = Mapper_Order.MapOrderWithOrderLines(m_order);
 
             IEnumerable<Inventory> dbStocks = _context.Inventories.Where(i => i.LocationId == m_order.LocationPlaced.ID);
             foreach(Inventory i in dbStocks)

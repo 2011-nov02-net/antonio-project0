@@ -24,6 +24,8 @@ namespace StoreApplication.DataAccess
             return new Entities.Order
             {
                 Id = order.OrderNumber,
+                CustomerId = order.CustomerPlaced.ID,
+                LocationId = order.LocationPlaced.ID,
                 Orderlines = order.Purchase.Select(Mapper_OrderLine.Map).ToList()
             };
         }

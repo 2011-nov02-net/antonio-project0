@@ -19,5 +19,8 @@ namespace StoreApplication.Library.Interfaces
         string GetOrderHistoryByCustomer(string[] customerName);
         void Save();
 
+        public List<Library.Models.Stock> GetStocksForLocation(int locationID);
+
+
     }
 }

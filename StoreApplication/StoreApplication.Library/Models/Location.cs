@@ -18,11 +18,12 @@ namespace StoreApplication.Library.Models
             int attempted = 0;
             foreach (OrderLine ol in newOrder.Purchase)
             {
-                if (CheckStockForOrderAttempt(Book.Library.Find(b => b.ISBN == ol.BookISBN), ol.Quantity, out response))
-                {
-                    response = "\n" + response;
-                    attempted++;
-                }
+                    if (CheckStockForOrderAttempt(Book.Library.Find(b=>b.ISBN.Contains(ol.BookISBN)), ol.Quantity, out response))
+                    {
+                        response = "\n" + response;
+                        attempted++;
+                    }
+                
             }
             message = response;
 
@@ -42,7 +43,7 @@ namespace StoreApplication.Library.Models
         {
             foreach (Stock i in Inventory)
             {
-                if (i.Book == book)
+                if (i.Book.ISBN == book.ISBN)
                 {
                     if (i.CheckStock(amount))
                     {

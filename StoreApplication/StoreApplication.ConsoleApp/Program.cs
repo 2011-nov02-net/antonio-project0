@@ -50,7 +50,7 @@ namespace StoreApplication.ConsoleApp
             }
         }
 
-        private static readonly string[] _mainMenuSelections = { "p", "a", "sc", "ddo", "dhl", "dhc", "s", "q", "help" };
+        private static readonly string[] _mainMenuSelections = { "p", "a", "sc", "ddo", "dhl", "dhc", "s", "q", "help", "t" };
         private static Regex alphanumeric = new Regex("^[a-zA-Z0-9]*$");
 
         public static void RunMenuSelection(IStoreRepository storeRepository)
@@ -70,6 +70,14 @@ namespace StoreApplication.ConsoleApp
                     string input = "";
                     switch (menuOption)
                     {
+                        case "t":
+                            Customer existingcustomer = storeRepository.GetCustomerWithLocationAndInventory(new string[] { "Antonio", "Mendez" });
+                            List<Stock> stock = existingcustomer.MyStoreLocation.Inventory;
+                            foreach(Stock st in stock)
+                            {
+                                Console.WriteLine(st);
+                            }
+                            break;
                         case "p":
                             Console.WriteLine("You have selected [Place an order for an existing customer]. Please enter the customer name you want to place the order for:");
                             string name = Console.ReadLine();

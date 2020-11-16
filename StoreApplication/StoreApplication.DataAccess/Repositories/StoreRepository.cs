@@ -58,8 +58,25 @@ namespace StoreApplication.DataAccess.Repositories
 
         public Library.Models.Customer GetCustomerWithLocationAndInventory(string[] name)
         {
-            return Mapper_Customer.MapCustomerWithLocation(_context.Customers.Include(l => l.Location)
-                   .ThenInclude(i => i.Inventories).First(c=> c.FirstName == name[0] && c.LastName == name[1]));
+            Customer dbCustomer = _context.Customers.Include(l=> l.Location).First(c => c.FirstName == name[0] && c.LastName == name[1]);
+
+            Library.Models.Customer m_customer = Mapper_Customer.MapCustomerWithLocation(dbCustomer);
+            m_customer.MyStoreLocation.Inventory = GetStocksForLocation(m_customer.MyStoreLocation.ID);
+
+            return m_customer;
+        }
+
+        public List<Library.Models.Stock> GetStocksForLocation(int locationID)
+        {
+            IEnumerable<Inventory> stocks = _context.Inventories.Include(b => b.BookIsbnNavigation).Where(i => i.LocationId ==locationID);
+            List<Library.Models.Stock> m_stocks = new List<Library.Models.Stock>();
+
+            foreach(Inventory s in stocks)
+            {
+                m_stocks.Add(Mapper_Inventory.Map(s));
+            }
+
+            return m_stocks;
         }
 
         /// <summary>

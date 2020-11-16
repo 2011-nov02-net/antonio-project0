@@ -28,5 +28,10 @@ namespace StoreApplication.Library.Models
             }
             return true;
         }
+
+        public override string ToString()
+        {
+            return $"BookISBN: {Book} \tQty: {Quantity}";
+        }
     }
 }

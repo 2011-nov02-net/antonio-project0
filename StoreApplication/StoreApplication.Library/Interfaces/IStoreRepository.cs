@@ -10,7 +10,7 @@ namespace StoreApplication.Library.Interfaces
     public interface IStoreRepository
     {
         IEnumerable<Location> GetAllLocations(string search = null);
-        void PlaceAnOrderForACustomer();
+        void PlaceAnOrderForACustomer(Order m_order);
         public Library.Models.Customer GetCustomerWithLocationAndInventory(string[] name);
         void AddACustomer(Customer customer);
         Customer FindCustomerByName(string[] search);
@@ -20,6 +20,7 @@ namespace StoreApplication.Library.Interfaces
         void Save();
 
         public List<Library.Models.Stock> GetStocksForLocation(int locationID);
+        void FillBookLibrary();
 
 
     }

@@ -31,8 +31,6 @@ namespace StoreApplication.ConsoleApp
 
             IStoreRepository storeRepository = dependencies.CreateStoreRepository();
 
-            storeRepository.PlaceAnOrderForACustomer();
-
             RunMenuSelection(storeRepository);
         }
 
@@ -109,8 +107,11 @@ namespace StoreApplication.ConsoleApp
                                 order.CustomerPlaced = newCustomer;
                                 order.LocationPlaced = newCustomer.MyStoreLocation;
                                 string s1 = "";
+                                storeRepository.FillBookLibrary();
                                 order.LocationPlaced.AttemptOrderAtLocation(order, out s1);
                                 Console.WriteLine(s1);
+
+                                storeRepository.PlaceAnOrderForACustomer(order);
                             }
                             break;
                         case "a":

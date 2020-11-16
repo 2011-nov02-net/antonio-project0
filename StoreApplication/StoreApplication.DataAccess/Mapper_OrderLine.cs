@@ -23,7 +23,7 @@ namespace StoreApplication.DataAccess
             return new Entities.Orderline
             {
                 BookIsbn = orderline.BookISBN,
-                Quantity = orderline.Quantity,
+                Quantity = orderline.Quantity
             };
         }
     }

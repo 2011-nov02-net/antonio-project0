@@ -41,19 +41,27 @@ namespace StoreApplication.DataAccess.Repositories
         /// The purpose of this class is to insert new a new order into the database. 
         /// </summary>
         /// <param name="Order">Type Library.Models.Order. It will contain all data about customer, location, and a list of orderlines.</param>
-        public void PlaceAnOrderForACustomer()
+        public void PlaceAnOrderForACustomer(Library.Models.Order m_order)
         {
-            IEnumerable<Book> dbBooks = _context.Books.ToList();
-            foreach (Book b in dbBooks)
+            // Create the Entity item to be put into the database
+            Order order;
+            order = Mapper_Order.Map(m_order);
+
+            IEnumerable<Inventory> dbStocks = _context.Inventories.Where(i => i.LocationId == m_order.LocationPlaced.ID);
+            foreach(Inventory i in dbStocks)
             {
-                Library.Models.Book.Library.Add(Mapper_Book.Map(b));
+                foreach(Library.Models.Stock stock in m_order.LocationPlaced.Inventory)
+                {
+                    if(stock.Book.ISBN == i.BookIsbn)
+                    {
+                        i.Quantity = stock.Quantity;
+                    }
+                }
             }
-
-            Customer dbCustomer = _context.Customers
-                .Include(l => l.Location)
-                .ThenInclude(i => i.Inventories)
-                .First(c => c.FirstName == "Darko");
-
+            
+            _context.SaveChanges();
+            _context.Add(order);
+            Save();
         }
 
         public Library.Models.Customer GetCustomerWithLocationAndInventory(string[] name)
@@ -111,11 +119,7 @@ namespace StoreApplication.DataAccess.Repositories
 
         public string GetDetailsForOrder(int ordernumber)
         {
-            IEnumerable<Book> dbBooks = _context.Books.ToList();
-            foreach (Book b in dbBooks)
-            {
-                Library.Models.Book.Library.Add(Mapper_Book.Map(b));
-            }
+            FillBookLibrary();
             Order dbOrder = _context.Orders
                 .Include(ol => ol.Orderlines)
                 .Include(c => c.Customer)
@@ -128,11 +132,7 @@ namespace StoreApplication.DataAccess.Repositories
 
         public string GetOrderHistoryByLocationID(int locationID)
         {
-            IEnumerable<Book> dbBooks = _context.Books.ToList();
-            foreach (Book b in dbBooks)
-            {
-                Library.Models.Book.Library.Add(Mapper_Book.Map(b));
-            }
+            FillBookLibrary();
             string results = "";
             Location dbLocation = _context.Locations
                 .Include(o => o.Orders)
@@ -149,11 +149,8 @@ namespace StoreApplication.DataAccess.Repositories
 
         public string GetOrderHistoryByCustomer(string[] customerName)
         {
-            IEnumerable<Book> dbBooks = _context.Books.ToList();
-            foreach(Book b in dbBooks)
-            {
-                Library.Models.Book.Library.Add(Mapper_Book.Map(b));
-            }
+            FillBookLibrary();
+            
             Customer dbCustomer = _context.Customers
                 .Include(o => o.Orders)
                 .ThenInclude(ol => ol.Orderlines)
@@ -166,6 +163,15 @@ namespace StoreApplication.DataAccess.Repositories
                 result += $"\n\t{order}";
             }
             return result;
+        }
+
+        public void FillBookLibrary()
+        {
+            IEnumerable<Book> dbBooks = _context.Books.ToList();
+            foreach (Book b in dbBooks)
+            {
+                Library.Models.Book.Library.Add(Mapper_Book.Map(b));
+            }
         }
 
         /// <summary>

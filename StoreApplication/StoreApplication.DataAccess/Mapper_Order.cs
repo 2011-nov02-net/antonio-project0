@@ -24,7 +24,6 @@ namespace StoreApplication.DataAccess
             return new Entities.Order
             {
                 Id = order.OrderNumber,
-                OrderDate = order.TimeStamp,
                 Orderlines = order.Purchase.Select(Mapper_OrderLine.Map).ToList()
             };
         }
@@ -43,7 +42,8 @@ namespace StoreApplication.DataAccess
             return new Entities.Order
             {
                 Id = order.OrderNumber,
-                OrderDate = order.TimeStamp
+                CustomerId = order.CustomerPlaced.ID,
+                LocationId = order.LocationPlaced.ID
             };
         }
         public static Library.Models.Order Map(Entities.Order order)

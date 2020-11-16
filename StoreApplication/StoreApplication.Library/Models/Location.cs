@@ -47,7 +47,7 @@ namespace StoreApplication.Library.Models
                 {
                     if (i.CheckStock(amount))
                     {
-                        message = $"Enough Books exist for: {book}!";
+                        message = $"Enough Books exist for: {book}.";
                         return true;
                     }
                     message = "There is not enough Books!";

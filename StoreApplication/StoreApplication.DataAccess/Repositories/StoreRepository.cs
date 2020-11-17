@@ -140,10 +140,12 @@ namespace StoreApplication.DataAccess.Repositories
         public Library.Models.Customer FindCustomerByName(string[] search)
         {
             Customer dbCustomer = _context.Customers
-                .Include(l => l.Location)
-                .First(c => c.FirstName == search[0] && c.LastName == search[1]);
-
-            return Mapper_Customer.MapCustomerWithLocation(_context.Customers.Find(dbCustomer.Id));
+                .FirstOrDefault(c => c.FirstName == search[0] && c.LastName == search[1]);
+            if(dbCustomer == null)
+            {
+                return null;
+            }
+            return Mapper_Customer.Map(dbCustomer);
         }
 
         public string GetDetailsForOrder(int ordernumber)
@@ -181,7 +183,11 @@ namespace StoreApplication.DataAccess.Repositories
             results += m_location;
             foreach (Library.Models.Order order in m_location.OrderHistory)
             {
-                results += $"\n\t{order}";
+                results += $"\n{order}";
+            }
+            if(results == m_location.ToString())
+            {
+                results += "\nNo orders have been placed at this location.";
             }
             return results;
         }
@@ -193,13 +199,17 @@ namespace StoreApplication.DataAccess.Repositories
             Customer dbCustomer = _context.Customers
                 .Include(o => o.Orders)
                 .ThenInclude(ol => ol.Orderlines)
-                .First(c => c.FirstName == customerName[0] && c.LastName == customerName[1]);
+                .FirstOrDefault(c => c.FirstName == customerName[0] && c.LastName == customerName[1]);
+            if(dbCustomer == null)
+            {
+                return "No Customer exists by this name.";
+            }
             string result = "";
             Library.Models.Customer m_customer = Mapper_Customer.MapCustomerWithOrders(dbCustomer);
             result += m_customer;
             foreach (Library.Models.Order order in m_customer.Orders)
             {
-                result += $"\n\t{order}";
+                result += $"\n{order}";
             }
             return result;
         }

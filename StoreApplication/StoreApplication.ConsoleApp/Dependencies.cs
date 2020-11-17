@@ -15,6 +15,9 @@ using System.Xml.Serialization;
 
 namespace StoreApplication.ConsoleApp
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Dependencies : IDesignTimeDbContextFactory<StoreContext>, IDisposable
     {
         private bool _disposedValue;

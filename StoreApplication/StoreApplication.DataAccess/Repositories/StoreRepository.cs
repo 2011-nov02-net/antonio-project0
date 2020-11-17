@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NLog;
 using StoreApplication.DataAccess.Entities;
 using StoreApplication.Library.Interfaces;
 using System;
@@ -13,30 +12,36 @@ namespace StoreApplication.DataAccess.Repositories
     public class StoreRepository : IStoreRepository
     {
         private readonly StoreContext _context;
-        private static readonly ILogger s_logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// A repository managing data access for restaurant objects and their review members,
+        /// A repository managing data access for Store objects,
         /// using Entity Framework.
         /// </summary>
-        /// <remarks>
-        /// This class ought to have better exception handling and logging.
-        /// </remarks>
         public StoreRepository(StoreContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        /// <summary>
+        /// This function can take a string or not. If it does then it will return a location by itself.
+        /// If it does not contain a string then it returns all the locations in the database mapped to
+        /// Library.Models.Location objects to print.
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns>The list of locations</returns>
         public IEnumerable<Library.Models.Location> GetAllLocations(string search = null)
         {
             IQueryable<Location> dbLocations = _context.Locations;
 
+            // This is were we check if it is one location or all
             if (search != null)
             {
                 dbLocations = dbLocations.Where(i => i.Name.Contains(search));
             }
+
             return dbLocations.Select(Mapper_Location.Map);
         }
+
         /// <summary>
         /// The purpose of this class is to insert new a new order into the database. 
         /// </summary>
@@ -47,27 +52,50 @@ namespace StoreApplication.DataAccess.Repositories
             Order order;
             order = Mapper_Order.MapOrderWithOrderLines(m_order);
 
+            // We need to grab the entity objects from the database for the inventory rows for the given location.
+            // This is so we can update them accordingly.
             IEnumerable<Inventory> dbStocks = _context.Inventories.Where(i => i.LocationId == m_order.LocationPlaced.ID);
-            foreach(Inventory i in dbStocks)
+
+            // Since we are returned all the rows of inventory we need to iterate through each one to update it
+            // This is done no matter if there was 1 purchase or many changing the inventory just to be sure 
+            // everything is updated correctly.
+            foreach (Inventory i in dbStocks)
             {
-                foreach(Library.Models.Stock stock in m_order.LocationPlaced.Inventory)
+                // We also need to iterate through all the Library.Models.Stock list for the location
+                foreach (Library.Models.Stock stock in m_order.LocationPlaced.Inventory)
                 {
-                    if(stock.Book.ISBN == i.BookIsbn)
+                    // An extra measure is taken here just to be sure that only books that exists in the database are being changed.
+                    if (stock.Book.ISBN == i.BookIsbn)
                     {
+                        // Set the new quantity
                         i.Quantity = stock.Quantity;
                     }
                 }
             }
-            
-            _context.SaveChanges();
+
+            // Add the new order and orderlines to the database
             _context.Add(order);
+
+            // Save those changes
             Save();
         }
 
+        /// <summary>
+        /// Right now this is mainly a helper method when placing the order. This is because this returns a Library.Models.Customer object
+        /// That is manipulated by the c# code. The intention was to get the Customer and then set the location and it's inventory
+        /// </summary>
+        /// <param name="name">Two strings that are valid names.</param>
+        /// <returns></returns>
         public Library.Models.Customer GetCustomerWithLocationAndInventory(string[] name)
         {
-            Customer dbCustomer = _context.Customers.Include(l=> l.Location).First(c => c.FirstName == name[0] && c.LastName == name[1]);
-
+            Customer dbCustomer = new Customer();
+            try
+            {
+                dbCustomer = _context.Customers.Include(l => l.Location).First(c => c.FirstName == name[0] && c.LastName == name[1]);
+            }
+            catch(InvalidOperationException ex) {
+                return null;
+            }
             Library.Models.Customer m_customer = Mapper_Customer.MapCustomerWithLocation(dbCustomer);
             m_customer.MyStoreLocation.Inventory = GetStocksForLocation(m_customer.MyStoreLocation.ID);
 
@@ -76,10 +104,10 @@ namespace StoreApplication.DataAccess.Repositories
 
         public List<Library.Models.Stock> GetStocksForLocation(int locationID)
         {
-            IEnumerable<Inventory> stocks = _context.Inventories.Include(b => b.BookIsbnNavigation).Where(i => i.LocationId ==locationID);
+            IEnumerable<Inventory> stocks = _context.Inventories.Include(b => b.BookIsbnNavigation).Where(i => i.LocationId == locationID);
             List<Library.Models.Stock> m_stocks = new List<Library.Models.Stock>();
 
-            foreach(Inventory s in stocks)
+            foreach (Inventory s in stocks)
             {
                 m_stocks.Add(Mapper_Inventory.Map(s));
             }
@@ -93,19 +121,20 @@ namespace StoreApplication.DataAccess.Repositories
         /// <param name="customer"> This is the new Model to be put into the database. It only has a firstname and last name.</param>
         public void AddACustomer(Library.Models.Customer customer)
         {
-            if (customer.ID != 0)
-            {
-                s_logger.Warn($"Customer to be added has an ID ({customer.ID}) already: ignoring.");
-            }
-
-            s_logger.Info($"Adding Customer: {customer}");
-
             // Create the Entity item to be put into the database
             Customer entity = new Customer();
+
+            // Since the database handles the ID setting with identity, we only need to assign the new entity the firstname and the lastname
+            // Maybe in the future we could add a way to change the location, but for now the database sets the location to the default 1.
             entity.FirstName = customer.FirstName;
             entity.LastName = customer.LastName;
             entity.Id = 0;
+
+            // Add the new entity to the context to send over to the database
             _context.Add(entity);
+
+            // I am using the aproach of sending the data over after each change instead of having a universal save button
+            Save();
         }
 
         public Library.Models.Customer FindCustomerByName(string[] search)
@@ -120,12 +149,22 @@ namespace StoreApplication.DataAccess.Repositories
         public string GetDetailsForOrder(int ordernumber)
         {
             FillBookLibrary();
-            Order dbOrder = _context.Orders
-                .Include(ol => ol.Orderlines)
-                .Include(c => c.Customer)
-                .Include(l => l.Location)
-                .First(o => o.Id == ordernumber);
-            Library.Models.Order o = Mapper_Order.MapOrderWithLocationCustomerAndOrderLines(dbOrder);
+            Order dbOrder;
+            Library.Models.Order o;
+            try
+            {
+                dbOrder = _context.Orders
+                    .Include(ol => ol.Orderlines)
+                    .Include(c => c.Customer)
+                    .Include(l => l.Location)
+                    .First(o => o.Id == ordernumber);
+
+                o = Mapper_Order.MapOrderWithLocationCustomerAndOrderLines(dbOrder);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return $"{ex.Message}\nOrder does not exist!";
+            }
 
             return $"{o}\n{o.CustomerPlaced}\t{o.LocationPlaced}";
         }
@@ -140,7 +179,7 @@ namespace StoreApplication.DataAccess.Repositories
                 .First(l => l.Id == locationID);
             Library.Models.Location m_location = Mapper_Location.MapLocationWithOrders(dbLocation);
             results += m_location;
-            foreach(Library.Models.Order order in m_location.OrderHistory)
+            foreach (Library.Models.Order order in m_location.OrderHistory)
             {
                 results += $"\n\t{order}";
             }
@@ -150,7 +189,7 @@ namespace StoreApplication.DataAccess.Repositories
         public string GetOrderHistoryByCustomer(string[] customerName)
         {
             FillBookLibrary();
-            
+
             Customer dbCustomer = _context.Customers
                 .Include(o => o.Orders)
                 .ThenInclude(ol => ol.Orderlines)
@@ -158,7 +197,7 @@ namespace StoreApplication.DataAccess.Repositories
             string result = "";
             Library.Models.Customer m_customer = Mapper_Customer.MapCustomerWithOrders(dbCustomer);
             result += m_customer;
-            foreach(Library.Models.Order order in m_customer.Orders)
+            foreach (Library.Models.Order order in m_customer.Orders)
             {
                 result += $"\n\t{order}";
             }
@@ -179,7 +218,6 @@ namespace StoreApplication.DataAccess.Repositories
         /// </summary>
         public void Save()
         {
-            s_logger.Info("Saving changes to the database");
             _context.SaveChanges();
         }
     }

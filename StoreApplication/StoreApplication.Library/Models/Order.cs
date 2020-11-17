@@ -19,8 +19,20 @@ namespace StoreApplication.Library.Models
         public bool AddNewOrderLine(string ISBNAndQuantity)
         {
             string[] lineFiltered = SplitString(ISBNAndQuantity);
+            if (!Book.CheckIfIsValidIsbn(lineFiltered[0])) 
+            { 
+                return false; 
+            }
             var newOrderLine = new OrderLine();
             newOrderLine.BookISBN = lineFiltered[0];
+            try
+            {
+                Int32.Parse(lineFiltered[1]);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
             newOrderLine.Quantity = Int32.Parse(lineFiltered[1]);
             Purchase.Add(newOrderLine);
             return true;
@@ -69,8 +81,8 @@ namespace StoreApplication.Library.Models
         }
         public override string ToString()
         {
-            string result =  $"Order Number: {OrderNumber}\tTotal: {GetOrderTotal()}\tOrder Date: {TimeStamp}\nItems:";
-            foreach(OrderLine ol in Purchase)
+            string result = $"Order Number: {OrderNumber}\tTotal: {GetOrderTotal()}\tOrder Date: {TimeStamp}\nItems:";
+            foreach (OrderLine ol in Purchase)
             {
                 result += $"\n\t{ol}";
             }

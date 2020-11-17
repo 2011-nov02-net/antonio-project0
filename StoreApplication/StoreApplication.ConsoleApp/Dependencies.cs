@@ -22,11 +22,11 @@ namespace StoreApplication.ConsoleApp
 
         public StoreContext CreateDbContext(string[] args = null)
         {
-            //using var logStream = new StreamWriter("logs.txt");
+            var logStream = new StreamWriter("logs.txt");
 
             var optionsBuilder = new DbContextOptionsBuilder<StoreContext>();
             optionsBuilder.UseSqlServer(GetConnectionString());
-            //optionsBuilder.LogTo(logStream.WriteLine);
+            optionsBuilder.LogTo(logStream.WriteLine);
 
             return new StoreContext(optionsBuilder.Options);
 
@@ -54,11 +54,6 @@ namespace StoreApplication.ConsoleApp
             }
             string connectionString = JsonSerializer.Deserialize<string>(json);
             return connectionString;
-        }
-
-        public XmlSerializer CreateXmlSerializer()
-        {
-            return new XmlSerializer(typeof(List<Library.Models.Location>));
         }
 
         protected virtual void Dispose(bool disposing)

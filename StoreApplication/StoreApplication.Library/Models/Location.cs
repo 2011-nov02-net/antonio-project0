@@ -54,7 +54,7 @@ namespace StoreApplication.Library.Models
                     return false;
                 }
             }
-            message = "Could not find book in inventory.";
+            message = $"Could not find bookISBN {book.ISBN} in inventory.";
             return false;
         }
 

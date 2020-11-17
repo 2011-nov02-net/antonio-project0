@@ -3,7 +3,6 @@ using StoreApplication.Library.Models;
 using StoreApplication.Library.Interfaces;
 using System;
 using System.Text.RegularExpressions;
-using NLog;
 using System.Xml.Serialization;
 using System.Linq;
 using System.Collections.Generic;
@@ -12,10 +11,7 @@ namespace StoreApplication.ConsoleApp
 {
     class Program
     {
-
-        private static readonly ILogger s_logger = LogManager.GetCurrentClassLogger();
-
-        public static string menu = "Welcome to your Book Store Management System:\n" 
+        public static string menu = "Welcome to your Book Store Management System:\n"
                 + "[p]\tPlace an order for a customer\n[a]\tAdd a new Customer" + "\n[sc]\tSearch for a customer by name" + "\n[ddo]\tDisplay details of an order"
                 + "\n[dhl]\tDisplay all order history of a store location" + "\n[dhc]\tDisplay all order history of a customer"
                 + "\n[s]\tSave Changes" + "\n[help]\tShow Menu" + "\n[q]\tQuit Application";
@@ -25,31 +21,15 @@ namespace StoreApplication.ConsoleApp
         /// </summary>
         static void Main(string[] args)
         {
-            // Load data
+            // Create our dependencies
             using var dependencies = new Dependencies();
-            XmlSerializer serializer = dependencies.CreateXmlSerializer();
+
+            // 
 
             IStoreRepository storeRepository = dependencies.CreateStoreRepository();
 
             RunMenuSelection(storeRepository);
         }
-
-        public static void DisplayAllLocations(IStoreRepository storeRepository)
-        {
-
-            var locations = storeRepository.GetAllLocations().ToList();
-            foreach (Location i in locations)
-            {
-                Console.WriteLine($"ID: {i.ID}\tLocation Name: {i.LocationName}");
-                foreach (Stock s in i.Inventory)
-                {
-                    Console.WriteLine($"\tISBN:{s.Book.ISBN}\tStock:{s.Quantity}");
-                }
-            }
-        }
-
-        private static readonly string[] _mainMenuSelections = { "p", "a", "sc", "ddo", "dhl", "dhc", "s", "q", "help", "t" };
-        private static Regex alphanumeric = new Regex("^[a-zA-Z0-9]*$");
 
         public static void RunMenuSelection(IStoreRepository storeRepository)
         {
@@ -63,54 +43,80 @@ namespace StoreApplication.ConsoleApp
             {
                 // Collect Input
                 menuOption = Console.ReadLine();
-                if (IsValidMainMenuSelection(menuOption, out response))
+                if (InputValidation.IsValidMainMenuSelection(menuOption, out response))
                 {
                     string input = "";
                     switch (menuOption)
                     {
-                        case "t":
-                            Customer existingcustomer = storeRepository.GetCustomerWithLocationAndInventory(new string[] { "Antonio", "Mendez" });
-                            List<Stock> stock = existingcustomer.MyStoreLocation.Inventory;
-                            foreach(Stock st in stock)
-                            {
-                                Console.WriteLine(st);
-                            }
-                            break;
                         case "p":
                             Console.WriteLine("You have selected [Place an order for an existing customer]. Please enter the customer name you want to place the order for:");
                             string name = Console.ReadLine();
                             if (InputValidation.IsValidCustomerName(name, out response))
                             {
                                 string[] names = name.Split(' ');
-                                var newCustomer = new Customer();
+                                var existingCustomer = new Customer();
+                                
                                 try
                                 {
-                                    newCustomer.FirstName = names[0];
-                                    newCustomer.LastName = names[1];
+                                    existingCustomer.FirstName = names[0];
+                                    existingCustomer.LastName = names[1];
                                 }
                                 catch (ArgumentException ex)
                                 {
-                                    s_logger.Info(ex);
                                     Console.WriteLine(ex.Message);
                                 }
-                                newCustomer = storeRepository.GetCustomerWithLocationAndInventory(names);
-                                Console.WriteLine(newCustomer);
-                                Console.WriteLine("Please enter the product name and quantity separated by a comma.\nType [done] when order is complete.");
-                                string orderlineItem = "";
+                                // Get a customer from the database
+                                existingCustomer = storeRepository.GetCustomerWithLocationAndInventory(names);
+
+                                // if an exception was thrown then end this switch
+                                if (existingCustomer== null)
+                                {
+                                    Console.WriteLine("Customer does not exist. Please pick a menu option to begin again.");
+                                    break;
+                                }
+
+                                // Continue though if the customer did exist
+                                Console.WriteLine($"Selected Customer: {existingCustomer}");
+
+                                // Begin the prompt to get each order line.
+                                Console.WriteLine("Please enter the product ISBN and quantity separated by a comma.\nType [done] when order is complete.");
+                                string orderlineItem;
+
+                                // Create the new order to add the orderlines and to use the library methods to ensure that it is possible to create the order.
                                 var order = new Order();
                                 orderlineItem = Console.ReadLine();
+
+                                // This function will fill the static list of the entire catalog to be used by any function or object
+                                storeRepository.FillBookLibrary();
+
+                                // Collect input untill there is a failure
                                 while (orderlineItem != "done")
                                 {
-                                    order.AddNewOrderLine(orderlineItem);
+                                    // If a failure does occur let the user know they must begin transaction from the beginning
+                                    if (!order.AddNewOrderLine(orderlineItem))
+                                    {
+                                        Console.WriteLine("Either the ISBN does not exist in our library or your quantity was not a valid number!"
+                                            +"\nPlease start process again from the main menu.");
+                                        break;
+                                    }
+                                    // Let them know if it a success and then continue collecting input until it fails
+                                    Console.WriteLine("Successfully added to the order.");
                                     orderlineItem = Console.ReadLine();
                                 }
-                                order.CustomerPlaced = newCustomer;
-                                order.LocationPlaced = newCustomer.MyStoreLocation;
-                                string s1 = "";
-                                storeRepository.FillBookLibrary();
-                                order.LocationPlaced.AttemptOrderAtLocation(order, out s1);
-                                Console.WriteLine(s1);
 
+                                // Now that we've collected and created all the objects we assign them to the order to be mapped later
+                                order.CustomerPlaced = existingCustomer;
+                                order.LocationPlaced = existingCustomer.MyStoreLocation;
+
+                                // Before that though we want to make sure we can place the order with the given locations inventory
+                                if(!order.LocationPlaced.AttemptOrderAtLocation(order, out response))
+                                {
+                                    // If it failed, let the user know why and then end the switch
+                                    Console.WriteLine(response);
+                                    break;
+                                }
+
+                                // If it is possible then we send the data over to the db so that it is saved
                                 storeRepository.PlaceAnOrderForACustomer(order);
                             }
                             break;
@@ -118,23 +124,27 @@ namespace StoreApplication.ConsoleApp
                             Console.WriteLine("You Have selected [Add New Customer]." + "\nPlease enter the name of the first and last name of the customer separated by a space:");
                             input = Console.ReadLine();
 
-                            if(InputValidation.IsValidCustomerName(input, out response))
+                            while (!InputValidation.IsValidCustomerName(input, out response))
                             {
-                                string[] names = input.Split(' ');
-                                var newCustomer = new Customer();
-                                try
-                                {
-                                    newCustomer.FirstName = names[0];
-                                    newCustomer.LastName = names[1];
-                                }
-                                catch (ArgumentException ex)
-                                {
-                                    s_logger.Info(ex);
-                                    Console.WriteLine(ex.Message);
-                                }
-
-                                storeRepository.AddACustomer(newCustomer);
+                                Console.WriteLine(response);
+                                input = Console.ReadLine();
                             }
+
+                            string[] newCustomerNames = input.Split(' ');
+                            var newCustomer = new Customer();
+                            try
+                            {
+                                newCustomer.FirstName = newCustomerNames[0];
+                                newCustomer.LastName = newCustomerNames[1];
+                            }
+                            catch (ArgumentException ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+
+                            storeRepository.AddACustomer(newCustomer);
+
+                            Console.WriteLine($"Customer {newCustomer.FirstName} {newCustomer.LastName} was added with the default location.");
                             break;
                         case "sc":
                             Console.WriteLine("You Have selected [Search By Customer Name]." + "\nPlease enter the full name of the customer:");
@@ -149,7 +159,6 @@ namespace StoreApplication.ConsoleApp
                             }
                             catch (ArgumentException ex)
                             {
-                                s_logger.Info(ex);
                                 Console.WriteLine(ex.Message);
                             }
                             Console.WriteLine(storeRepository.FindCustomerByName(candidate).ToString());
@@ -178,11 +187,6 @@ namespace StoreApplication.ConsoleApp
 
                             Console.WriteLine(storeRepository.GetOrderHistoryByCustomer(s));
                             break;
-                        case "s":
-                            Console.WriteLine("You Have selected [Save Changes].");
-
-                            storeRepository.Save();
-                            break;
                         case "help":
                             Console.WriteLine(menu);
                             break;
@@ -191,37 +195,8 @@ namespace StoreApplication.ConsoleApp
                             break;
                     }
                 }
+                else { Console.WriteLine(response); }
             }
-        }
-
-        public static bool IsValidMainMenuSelection(string candidate, out string message)
-        {
-            if (!IsValidString(candidate))
-            {
-                message = "Please use Alphanumeric numbers only!";
-                return false;
-            }
-            foreach (var option in _mainMenuSelections)
-            {
-                if (candidate.ToLower() == option)
-                {
-                    message = "";
-                    return true;
-                }
-            }
-            message = "Input was not a menu option. Please enter a menu option. Enter [help] to see menu options again.";
-            return false;
-        }
-
-        public static bool IsValidNumber(string candidate)
-        {
-            int i;
-            return int.TryParse(candidate, out i);
-        }
-
-        public static bool IsValidString(string candidate)
-        {
-            return alphanumeric.IsMatch(candidate);
         }
     }
 }

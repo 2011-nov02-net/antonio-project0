@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace StoreApplication.Library.Models
@@ -14,6 +15,11 @@ namespace StoreApplication.Library.Models
         public decimal Price { get; set; }
 
         public static List<Book> Library = new List<Book>();
+
+        public static bool CheckIfIsValidIsbn(string candidate)
+        {   
+            return Library.Any(b => b.ISBN == candidate);
+        }
 
         public override string ToString()
         {

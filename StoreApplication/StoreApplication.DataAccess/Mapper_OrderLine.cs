@@ -8,6 +8,11 @@ namespace StoreApplication.DataAccess
 {
     public static class Mapper_OrderLine
     {
+        /// <summary>
+        /// Turn an entity orderline into a model orderline
+        /// </summary>
+        /// <param name="orderline"></param>
+        /// <returns></returns>
         public static Library.Models.OrderLine Map(Entities.Orderline orderline)
         {
             return new Library.Models.OrderLine
@@ -18,6 +23,11 @@ namespace StoreApplication.DataAccess
             };
         }
 
+        /// <summary>
+        /// turn a model orderline into an entity orderline
+        /// </summary>
+        /// <param name="orderline"></param>
+        /// <returns></returns>
         public static Entities.Orderline Map(Library.Models.OrderLine orderline)
         {
             return new Entities.Orderline

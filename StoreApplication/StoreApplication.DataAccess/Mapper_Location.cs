@@ -39,6 +39,11 @@ namespace StoreApplication.DataAccess
             };
         }
 
+        /// <summary>
+        /// turn an entity location with their inventory into a model inventory
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public static Library.Models.Location MapLocationsWithInventory(Entities.Location location)
         {
             return new Library.Models.Location 
@@ -49,6 +54,11 @@ namespace StoreApplication.DataAccess
             };
         }
 
+        /// <summary>
+        /// Turn a location into an entity location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public static Entities.Location Map(Library.Models.Location location)
         {
             return new Entities.Location
@@ -57,6 +67,12 @@ namespace StoreApplication.DataAccess
                 Name = location.LocationName
             };
         }
+
+        /// <summary>
+        /// Turn a location into an entity location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public static Library.Models.Location Map(Entities.Location location)
         {
             return new Library.Models.Location

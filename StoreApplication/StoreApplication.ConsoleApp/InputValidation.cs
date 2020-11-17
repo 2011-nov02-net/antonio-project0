@@ -13,6 +13,12 @@ namespace StoreApplication.ConsoleApp
         private static Regex alphanumeric = new Regex("^[a-zA-Z0-9]*$");
         private static Regex letters = new Regex("^[a-zA-Z]+$");
 
+        /// <summary>
+        /// Not only do we want to make sure that the two strings are characters but that they are words
+        /// </summary>
+        /// <param name="candidate"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public static bool IsValidCustomerName(string candidate, out string message)
         {
             string[] names = candidate.Split(' ');
@@ -30,11 +36,22 @@ namespace StoreApplication.ConsoleApp
             return true;
         }
 
+        /// <summary>
+        /// Checks if a given string is a word
+        /// </summary>
+        /// <param name="candidate"></param>
+        /// <returns></returns>
         public static bool IsValidWord(string candidate)
         {
             return letters.IsMatch(candidate);
         }
 
+        /// <summary>
+        /// Checks if a given menu selection is present in the list
+        /// </summary>
+        /// <param name="candidate"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public static bool IsValidMainMenuSelection(string candidate, out string message)
         {
             if (!IsValidString(candidate))
@@ -54,12 +71,22 @@ namespace StoreApplication.ConsoleApp
             return false;
         }
 
+        /// <summary>
+        /// Checks that the given string is a valid number
+        /// </summary>
+        /// <param name="candidate"></param>
+        /// <returns></returns>
         public static bool IsValidNumber(string candidate)
         {
             int i;
             return int.TryParse(candidate, out i);
         }
 
+        /// <summary>
+        /// check that the given string only contains letters or numbers
+        /// </summary>
+        /// <param name="candidate"></param>
+        /// <returns></returns>
         public static bool IsValidString(string candidate)
         {
             return alphanumeric.IsMatch(candidate);

@@ -8,6 +8,11 @@ namespace StoreApplication.DataAccess
 {
     public static class Mapper_Inventory
     {
+        /// <summary>
+        /// Turn a entity inventory into a model stock
+        /// </summary>
+        /// <param name="inventory"></param>
+        /// <returns></returns>
         public static Library.Models.Stock Map(Entities.Inventory inventory)
         {
             return new Library.Models.Stock
@@ -16,7 +21,12 @@ namespace StoreApplication.DataAccess
                 Quantity = (int)inventory.Quantity
             };
         }
-
+        
+        /// <summary>
+        /// Turn a model stock into an entity inventory
+        /// </summary>
+        /// <param name="stock"></param>
+        /// <returns></returns>
         public static Entities.Inventory Map(Library.Models.Stock stock)
         {
             return new Entities.Inventory

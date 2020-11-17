@@ -5,6 +5,9 @@ using System.Text;
 
 namespace StoreApplication.Library.Models
 {
+    /// <summary>
+    /// This is just used to store a book object
+    /// </summary>
     public class Book
     {
         public string ISBN { get; set; }
@@ -16,6 +19,12 @@ namespace StoreApplication.Library.Models
 
         public static List<Book> Library = new List<Book>();
 
+        /// <summary>
+        /// If it werent for this function then this class could almost be a struct.
+        /// But this method returns true if the library contains a given isbn
+        /// </summary>
+        /// <param name="candidate"></param>
+        /// <returns></returns>
         public static bool CheckIfIsValidIsbn(string candidate)
         {   
             return Library.Any(b => b.ISBN == candidate);

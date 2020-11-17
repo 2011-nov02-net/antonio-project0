@@ -8,6 +8,11 @@ namespace StoreApplication.DataAccess
 {
     public static class Mapper_Customer
     {
+        /// <summary>
+        /// Turn a model customer with their location into a entity customer
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public static Entities.Customer MapCustomerWithLocation(Library.Models.Customer customer)
         {
             return new Entities.Customer
@@ -18,6 +23,11 @@ namespace StoreApplication.DataAccess
                 Location = Mapper_Location.Map(customer.MyStoreLocation)
             };
         }
+        /// <summary>
+        /// Turn an entity customer with their location into a model customer
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public static Library.Models.Customer MapCustomerWithLocation(Entities.Customer customer)
         {
             return new Library.Models.Customer
@@ -29,21 +39,11 @@ namespace StoreApplication.DataAccess
             };
         }
 
-
-        public static Entities.Customer MapFullCustomer(Library.Models.Customer customer)
-        {
-            return new Entities.Customer
-            {
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                Id = customer.ID,
-                Location = Mapper_Location.Map(customer.MyStoreLocation),
-                Orders = customer.Orders.Select(Mapper_Order.MapOrderWithOrderLines).ToList(),
-                LocationId = customer.MyStoreLocation.ID
-
-            };
-        }
-
+        /// <summary>
+        /// Turn an entity customer with their orders into a customer model
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public static Library.Models.Customer MapCustomerWithOrders(Entities.Customer customer)
         {
             return new Library.Models.Customer

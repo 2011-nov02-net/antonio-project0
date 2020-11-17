@@ -8,6 +8,11 @@ namespace StoreApplication.DataAccess
 {
     public static class Mapper_Order
     {
+        /// <summary>
+        /// Turn an entity order with the location and customer and it's orderlines into objects
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public static Library.Models.Order MapOrderWithLocationCustomerAndOrderLines(Entities.Order order)
         {
             return new Library.Models.Order
@@ -19,6 +24,12 @@ namespace StoreApplication.DataAccess
                 LocationPlaced = Mapper_Location.Map(order.Location)
             };
         }
+
+        /// <summary>
+        /// Turn a model object into an entity order with their orderlines
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public static Entities.Order MapOrderWithOrderLines(Library.Models.Order order)
         {
             return new Entities.Order
@@ -29,6 +40,12 @@ namespace StoreApplication.DataAccess
                 Orderlines = order.Purchase.Select(Mapper_OrderLine.Map).ToList()
             };
         }
+
+        /// <summary>
+        /// Turn a map order with their orderlines into a model order with model orderlines
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public static Library.Models.Order MapOrderWithOrderLines(Entities.Order order)
         {
             return new Library.Models.Order

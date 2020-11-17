@@ -8,6 +8,11 @@ namespace StoreApplication.DataAccess
 {
     public static class Mapper_Book
     {
+        /// <summary>
+        /// The purpose of this method is to take a db object and turn it into a model object
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
         public static Library.Models.Book Map(Entities.Book book)
         {
             return new Library.Models.Book { 
@@ -19,6 +24,11 @@ namespace StoreApplication.DataAccess
             };
         }
 
+        /// <summary>
+        /// The purpose of this method to take a model book and turn it into a db book
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
         public static Entities.Book Map(Library.Models.Book book)
         {
             return new Entities.Book

@@ -121,9 +121,3 @@ insert into orderline(order_id, book_isbn, quantity) values (1, '978-1640320437'
 
 insert into orderline(order_id, book_isbn, quantity) values (2, '978-0553103540',1)
 insert into orderline(order_id, book_isbn, quantity) values (2, '978-1617294563',23)
-
-select * from customer, location where customer.id = 3 AND customer.location_id = location.id;
-
-insert into orders (customer_id, location_id) values (4,5);
-insert into orderline (order_id, book_isbn, quantity) values (3, '978-1617294563', 8)
-update inventory set quantity = 655 where location_id = 5 AND book_isbn = '978-1617294563'

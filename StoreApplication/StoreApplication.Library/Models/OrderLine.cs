@@ -9,7 +9,7 @@ namespace StoreApplication.Library.Models
         public string BookISBN { get; set; }
         public int Quantity { get; set; }
 
-        private decimal _lineCost;
+        private decimal _lineCost = 0;
         public decimal LineCost
         {
             get { return _lineCost; }

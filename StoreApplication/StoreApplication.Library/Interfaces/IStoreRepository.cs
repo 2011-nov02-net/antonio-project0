@@ -11,12 +11,12 @@ namespace StoreApplication.Library.Interfaces
     {
         IEnumerable<Location> GetAllLocations(string search = null);
         void PlaceAnOrderForACustomer(Order m_order);
-        public Library.Models.Customer GetCustomerWithLocationAndInventory(string[] name);
+        public Library.Models.Customer GetCustomerWithLocationAndInventory(int id);
         void AddACustomer(Customer customer);
-        Customer FindCustomerByName(string[] search);
+        public List<Library.Models.Customer> FindCustomerByName(string[] search);
         string GetDetailsForOrder(int ordernumber);
         string GetOrderHistoryByLocationID(int locationID);
-        string GetOrderHistoryByCustomer(string[] customerName);
+        public string GetOrderHistoryByCustomer(int id);
         void Save();
 
         public List<Library.Models.Stock> GetStocksForLocation(int locationID);

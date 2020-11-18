@@ -13,7 +13,14 @@ namespace StoreApplication.Library.Models
 
         public void AdjustStock(int amount)
         {
-            Quantity -= amount;
+            if (Quantity - amount < 0)
+            {
+                Quantity = 0;
+            }
+            else
+            {
+                Quantity -= amount;
+            }
         }
 
         public bool CheckStock(int check)

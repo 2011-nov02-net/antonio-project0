@@ -86,14 +86,14 @@ namespace StoreApplication.DataAccess.Repositories
         /// </summary>
         /// <param name="name">Two strings that are valid names.</param>
         /// <returns></returns>
-        public Library.Models.Customer GetCustomerWithLocationAndInventory(string[] name)
+        public Library.Models.Customer GetCustomerWithLocationAndInventory(int id)
         {
             // first we create our db customer to check if we find it
             Customer dbCustomer = new Customer();
             try
             {
                 // if we do then we assign it to the customer
-                dbCustomer = _context.Customers.Include(l => l.Location).First(c => c.FirstName == name[0] && c.LastName == name[1]);
+                dbCustomer = _context.Customers.Include(l => l.Location).First(c => c.Id == id);
             }
             catch(InvalidOperationException ex) {
                 // if we don't then we return null 
@@ -155,11 +155,10 @@ namespace StoreApplication.DataAccess.Repositories
         /// </summary>
         /// <param name="search">Two strings a first and a last name</param>
         /// <returns>A customer object</returns>
-        public Library.Models.Customer FindCustomerByName(string[] search)
+        public List<Library.Models.Customer> FindCustomerByName(string[] search)
         {
             // Search the db and if someone is found assign it if no one was found assign null
-            Customer dbCustomer = _context.Customers
-                .FirstOrDefault(c => c.FirstName == search[0] && c.LastName == search[1]);
+            List<Customer> dbCustomer = _context.Customers.Where(c => (c.FirstName == search[0] && c.LastName==search[1])).ToList();
             
             // if it is null exit the method and return null
             if(dbCustomer == null)
@@ -167,7 +166,13 @@ namespace StoreApplication.DataAccess.Repositories
                 return null;
             }
 
-            return Mapper_Customer.Map(dbCustomer);
+            List<Library.Models.Customer> m_customers = new List<Library.Models.Customer>();
+            foreach (Customer customer in dbCustomer)
+            {
+                m_customers.Add(Mapper_Customer.Map(customer));
+            }
+
+            return m_customers;
         }
         /// <summary>
         /// The purpose of this method is to return the string version of an order, given an order number.
@@ -250,7 +255,7 @@ namespace StoreApplication.DataAccess.Repositories
             return results;
         }
 
-        public string GetOrderHistoryByCustomer(string[] customerName)
+        public string GetOrderHistoryByCustomer(int id)
         {
             // This method is called because we need the information on the whole catalog
             // Since the catalog is small I went with this implementation.
@@ -261,7 +266,7 @@ namespace StoreApplication.DataAccess.Repositories
             Customer dbCustomer = _context.Customers
                 .Include(o => o.Orders)
                 .ThenInclude(ol => ol.Orderlines)
-                .FirstOrDefault(c => c.FirstName == customerName[0] && c.LastName == customerName[1]);
+                .FirstOrDefault(c => c.Id == id);
 
             // If the customer was not found then let the user know
             if(dbCustomer == null)

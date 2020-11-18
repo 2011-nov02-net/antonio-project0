@@ -32,7 +32,7 @@ namespace StoreApplication.Library.Models
 
         public override string ToString()
         {
-            return $"ISBN{ISBN}\tTitle: {Title}\tAuthor: {AuthorFullName}";
+            return $"ISBN: {ISBN}\tTitle: {Title}\tAuthor: {AuthorFullName}\tPrice: {Price}";
         }
     }
 }

@@ -7,6 +7,7 @@ namespace StoreApplication.Library.Models
 {
     public class Order
     {
+        private const int ordercap = 250;
         public Location LocationPlaced { get; set; }
         public Customer CustomerPlaced { get; set; }
         public List<OrderLine> Purchase { get; set; } = new List<OrderLine>();
@@ -35,6 +36,10 @@ namespace StoreApplication.Library.Models
             try
             {
                 Int32.Parse(lineFiltered[1]);
+                if (Int32.Parse(lineFiltered[1]) >= ordercap)
+                {
+                    return false;
+                }
             }
             catch (Exception ex)
             {

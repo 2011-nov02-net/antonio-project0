@@ -100,7 +100,8 @@ namespace StoreApplication.ConsoleApp
                                 // If a failure does occur let the user know they must begin transaction from the beginning
                                 if (!order.AddNewOrderLine(orderlineItem))
                                 {
-                                    Console.WriteLine("Either the ISBN does not exist in our library or your quantity was not a valid number!"
+                                    Console.WriteLine("Either the ISBN does not exist in our library, our quantity was not a valid number," +
+                                        " or you attempted to place an order with an unreasonable amount of product."
                                         + "\nPlease start process again from the main menu.");
                                     success = !success;
                                     break;

@@ -19,6 +19,6 @@ namespace StoreApplication.Library.Interfaces
         public IEnumerable<Order> GetOrderHistoryByCustomer(int id);
         void Save();
         public List<Library.Models.Stock> GetStocksForLocation(int locationID);
-        void FillBookLibrary();
+        IEnumerable<Library.Models.Book> FillBookLibrary();
     }
 }

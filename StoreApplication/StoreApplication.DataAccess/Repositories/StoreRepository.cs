@@ -290,13 +290,14 @@ namespace StoreApplication.DataAccess.Repositories
         /// <summary>
         /// The purpose of this class is to fill the static library in the models with the book information
         /// </summary>
-        public void FillBookLibrary()
+        IEnumerable<Library.Models.Book> FillBookLibrary();
         {
             IEnumerable<BookEntity> dbBooks = _context.Books.ToList();
             foreach (BookEntity b in dbBooks)
             {
-                Library.Models.Book.Library.Add(Mapper_Book.Map(b));
+                Library.Models.Book.Library.ToList().Add(Mapper_Book.Map(b));
             }
+            return Library.Models.Book.Library;
         }
 
         /// <summary>

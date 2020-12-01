@@ -47,7 +47,9 @@ create table orderline(
 	id int primary key identity,
 	order_id int not null foreign key references orders(id),
 	book_isbn nvarchar(15) not null foreign key references book(isbn),
-	quantity int not null
+	quantity int not null,
+	total decimal(19,4) not null
+
 )
 
 insert into location (name) values ('Reston, VA');

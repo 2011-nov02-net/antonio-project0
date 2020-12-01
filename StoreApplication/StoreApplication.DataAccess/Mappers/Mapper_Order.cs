@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StoreApplication.DataAccess
+namespace StoreApplication.DataAccess.Mappers
 {
     public static class Mapper_Order
     {
@@ -13,7 +13,7 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public static Library.Models.Order MapOrderWithLocationCustomerAndOrderLines(Entities.Order order)
+        public static Library.Models.Order MapOrderWithLocationCustomerAndOrderLines(Entities.OrderEntity order)
         {
             return new Library.Models.Order
             {
@@ -30,9 +30,9 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public static Entities.Order MapOrderWithOrderLines(Library.Models.Order order)
+        public static Entities.OrderEntity MapOrderWithOrderLines(Library.Models.Order order)
         {
-            return new Entities.Order
+            return new Entities.OrderEntity
             {
                 Id = order.OrderNumber,
                 CustomerId = order.CustomerPlaced.ID,
@@ -46,7 +46,7 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public static Library.Models.Order MapOrderWithOrderLines(Entities.Order order)
+        public static Library.Models.Order MapOrderWithOrderLines(Entities.OrderEntity order)
         {
             return new Library.Models.Order
             {
@@ -56,16 +56,16 @@ namespace StoreApplication.DataAccess
             };
         }
 
-        public static Entities.Order Map(Library.Models.Order order)
+        public static Entities.OrderEntity Map(Library.Models.Order order)
         {
-            return new Entities.Order
+            return new Entities.OrderEntity
             {
                 Id = order.OrderNumber,
                 CustomerId = order.CustomerPlaced.ID,
                 LocationId = order.LocationPlaced.ID
             };
         }
-        public static Library.Models.Order Map(Entities.Order order)
+        public static Library.Models.Order Map(Entities.OrderEntity order)
         {
             return new Library.Models.Order
             {

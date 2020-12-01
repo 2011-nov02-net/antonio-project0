@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace StoreApplication.DataAccess.Entities
 {
-    public partial class Orderline
+    public partial class OrderlineEntity
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
         public string BookIsbn { get; set; }
         public int Quantity { get; set; }
 
-        public virtual Book BookIsbnNavigation { get; set; }
-        public virtual Order Order { get; set; }
+        public virtual BookEntity BookIsbnNavigation { get; set; }
+        public virtual OrderEntity Order { get; set; }
     }
 }

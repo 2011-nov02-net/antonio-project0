@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StoreApplication.DataAccess
+namespace StoreApplication.DataAccess.Mappers
 {
     public static class Mapper_Book
     {
@@ -13,7 +13,7 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public static Library.Models.Book Map(Entities.Book book)
+        public static Library.Models.Book Map(Entities.BookEntity book)
         {
             return new Library.Models.Book { 
             AuthorFirstName = book.AuthorFirstName,
@@ -29,9 +29,9 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public static Entities.Book Map(Library.Models.Book book)
+        public static Entities.BookEntity Map(Library.Models.Book book)
         {
-            return new Entities.Book
+            return new Entities.BookEntity
             {
                 Isbn = book.ISBN,
                 AuthorFirstName = book.AuthorFirstName,

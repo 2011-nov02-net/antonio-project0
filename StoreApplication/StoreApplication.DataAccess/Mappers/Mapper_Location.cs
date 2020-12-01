@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StoreApplication.DataAccess
+namespace StoreApplication.DataAccess.Mappers
 {
     public static class Mapper_Location
     {
@@ -14,9 +14,9 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="location">The location model.</param>
         /// <returns new Entity.Location></returns>
-        public static Entities.Location MapLocationWithOrders(Library.Models.Location location)
+        public static Entities.LocationEntity MapLocationWithOrders(Library.Models.Location location)
         {
-            return new Entities.Location
+            return new Entities.LocationEntity
             {
                 Id = location.ID,
                 Name = location.LocationName,
@@ -29,7 +29,7 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="customer">The customer entity.</param>
         /// <returns></returns>
-        public static Library.Models.Location MapLocationWithOrders(Entities.Location location)
+        public static Library.Models.Location MapLocationWithOrders(Entities.LocationEntity location)
         {
             return new Library.Models.Location
             {
@@ -44,7 +44,7 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public static Library.Models.Location MapLocationsWithInventory(Entities.Location location)
+        public static Library.Models.Location MapLocationsWithInventory(Entities.LocationEntity location)
         {
             return new Library.Models.Location 
             {
@@ -59,9 +59,9 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public static Entities.Location Map(Library.Models.Location location)
+        public static Entities.LocationEntity Map(Library.Models.Location location)
         {
-            return new Entities.Location
+            return new Entities.LocationEntity
             {
                 Id = location.ID,
                 Name = location.LocationName
@@ -73,7 +73,7 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public static Library.Models.Location Map(Entities.Location location)
+        public static Library.Models.Location Map(Entities.LocationEntity location)
         {
             return new Library.Models.Location
             {

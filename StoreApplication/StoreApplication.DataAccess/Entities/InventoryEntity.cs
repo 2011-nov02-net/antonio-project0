@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace StoreApplication.DataAccess.Entities
 {
-    public partial class Inventory
+    public partial class InventoryEntity
     {
         public int LocationId { get; set; }
         public string BookIsbn { get; set; }
         public int? Quantity { get; set; }
 
-        public virtual Book BookIsbnNavigation { get; set; }
-        public virtual Location Location { get; set; }
+        public virtual BookEntity BookIsbnNavigation { get; set; }
+        public virtual LocationEntity Location { get; set; }
     }
 }

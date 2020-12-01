@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StoreApplication.DataAccess
+namespace StoreApplication.DataAccess.Mappers
 {
     public static class Mapper_Customer
     {
@@ -13,9 +13,9 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public static Entities.Customer MapCustomerWithLocation(Library.Models.Customer customer)
+        public static Entities.CustomerEntity MapCustomerWithLocation(Library.Models.Customer customer)
         {
-            return new Entities.Customer
+            return new Entities.CustomerEntity
             {
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
@@ -28,7 +28,7 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public static Library.Models.Customer MapCustomerWithLocation(Entities.Customer customer)
+        public static Library.Models.Customer MapCustomerWithLocation(Entities.CustomerEntity customer)
         {
             return new Library.Models.Customer
             {
@@ -44,7 +44,7 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public static Library.Models.Customer MapCustomerWithOrders(Entities.Customer customer)
+        public static Library.Models.Customer MapCustomerWithOrders(Entities.CustomerEntity customer)
         {
             return new Library.Models.Customer
             {
@@ -61,9 +61,9 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="customer">The customer model.</param>
         /// <returns></returns>
-        public static Entities.Customer Map(Library.Models.Customer customer)
+        public static Entities.CustomerEntity Map(Library.Models.Customer customer)
         {
-            return new Entities.Customer
+            return new Entities.CustomerEntity
             {
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
@@ -77,7 +77,7 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="customer">The customer entity.</param>
         /// <returns></returns>
-        public static Library.Models.Customer Map(Entities.Customer customer)
+        public static Library.Models.Customer Map(Entities.CustomerEntity customer)
         {
             return new Library.Models.Customer
             {

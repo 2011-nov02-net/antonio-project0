@@ -16,7 +16,7 @@ namespace StoreApplication.Library.Interfaces
         public List<Library.Models.Customer> FindCustomerByName(string[] search);
         string GetDetailsForOrder(int ordernumber);
         string GetOrderHistoryByLocationID(int locationID);
-        public string GetOrderHistoryByCustomer(int id);
+        public IEnumerable<Order> GetOrderHistoryByCustomer(int id);
         void Save();
 
         public List<Library.Models.Stock> GetStocksForLocation(int locationID);

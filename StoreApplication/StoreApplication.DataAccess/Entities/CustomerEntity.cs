@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace StoreApplication.DataAccess.Entities
 {
-    public partial class Customer
+    public partial class CustomerEntity
     {
-        public Customer()
+        public CustomerEntity()
         {
-            Orders = new HashSet<Order>();
+            Orders = new HashSet<OrderEntity>();
         }
 
         public int Id { get; set; }
@@ -17,7 +17,7 @@ namespace StoreApplication.DataAccess.Entities
         public string LastName { get; set; }
         public int? LocationId { get; set; }
 
-        public virtual Location Location { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual LocationEntity Location { get; set; }
+        public virtual ICollection<OrderEntity> Orders { get; set; }
     }
 }

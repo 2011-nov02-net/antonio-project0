@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StoreApplication.DataAccess.Entities;
+using StoreApplication.DataAccess.Mappers;
 using StoreApplication.Library.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace StoreApplication.DataAccess.Repositories
         /// <returns>The list of locations</returns>
         public IEnumerable<Library.Models.Location> GetAllLocations(string search = null)
         {
-            IQueryable<Location> dbLocations = _context.Locations;
+            IQueryable<LocationEntity> dbLocations = _context.Locations;
 
             // This is were we check if it is one location or all
             if (search != null)
@@ -49,17 +50,17 @@ namespace StoreApplication.DataAccess.Repositories
         public void PlaceAnOrderForACustomer(Library.Models.Order m_order)
         {
             // Create the Entity item to be put into the database
-            Order order;
+            OrderEntity order;
             order = Mapper_Order.MapOrderWithOrderLines(m_order);
 
             // We need to grab the entity objects from the database for the inventory rows for the given location.
             // This is so we can update them accordingly.
-            IEnumerable<Inventory> dbStocks = _context.Inventories.Where(i => i.LocationId == m_order.LocationPlaced.ID);
+            IEnumerable<InventoryEntity> dbStocks = _context.Inventories.Where(i => i.LocationId == m_order.LocationPlaced.ID);
 
             // Since we are returned all the rows of inventory we need to iterate through each one to update it
             // This is done no matter if there was 1 purchase or many changing the inventory just to be sure 
             // everything is updated correctly.
-            foreach (Inventory i in dbStocks)
+            foreach (InventoryEntity i in dbStocks)
             {
                 // We also need to iterate through all the Library.Models.Stock list for the location
                 foreach (Library.Models.Stock stock in m_order.LocationPlaced.Inventory)
@@ -89,7 +90,7 @@ namespace StoreApplication.DataAccess.Repositories
         public Library.Models.Customer GetCustomerWithLocationAndInventory(int id)
         {
             // first we create our db customer to check if we find it
-            Customer dbCustomer = new Customer();
+            CustomerEntity dbCustomer = new CustomerEntity();
             try
             {
                 // if we do then we assign it to the customer
@@ -116,11 +117,11 @@ namespace StoreApplication.DataAccess.Repositories
         public List<Library.Models.Stock> GetStocksForLocation(int locationID)
         {
             // since it is a location that exists we don't have to do much exception handling and we just get the inventories for the location including the book table
-            IEnumerable<Inventory> stocks = _context.Inventories.Include(b => b.BookIsbnNavigation).Where(i => i.LocationId == locationID);
+            IEnumerable<InventoryEntity> stocks = _context.Inventories.Include(b => b.BookIsbnNavigation).Where(i => i.LocationId == locationID);
             List<Library.Models.Stock> m_stocks = new List<Library.Models.Stock>();
 
             // assign each stock from the list of stocks to a model
-            foreach (Inventory s in stocks)
+            foreach (InventoryEntity s in stocks)
             {
                 m_stocks.Add(Mapper_Inventory.Map(s));
             }
@@ -135,7 +136,7 @@ namespace StoreApplication.DataAccess.Repositories
         public void AddACustomer(Library.Models.Customer customer)
         {
             // Create the Entity item to be put into the database
-            Customer entity = new Customer();
+            CustomerEntity entity = new CustomerEntity();
 
             // Since the database handles the ID setting with identity, we only need to assign the new entity the firstname and the lastname
             // Maybe in the future we could add a way to change the location, but for now the database sets the location to the default 1.
@@ -158,7 +159,7 @@ namespace StoreApplication.DataAccess.Repositories
         public List<Library.Models.Customer> FindCustomerByName(string[] search)
         {
             // Search the db and if someone is found assign it if no one was found assign null
-            List<Customer> dbCustomer = _context.Customers.Where(c => (c.FirstName == search[0] && c.LastName==search[1])).ToList();
+            List<CustomerEntity> dbCustomer = _context.Customers.Where(c => (c.FirstName == search[0] && c.LastName==search[1])).ToList();
             
             // if it is null exit the method and return null
             if(dbCustomer == null)
@@ -167,7 +168,7 @@ namespace StoreApplication.DataAccess.Repositories
             }
 
             List<Library.Models.Customer> m_customers = new List<Library.Models.Customer>();
-            foreach (Customer customer in dbCustomer)
+            foreach (CustomerEntity customer in dbCustomer)
             {
                 m_customers.Add(Mapper_Customer.Map(customer));
             }
@@ -188,7 +189,7 @@ namespace StoreApplication.DataAccess.Repositories
             FillBookLibrary();
 
             // Create the order objects to be filled
-            Order dbOrder;
+            OrderEntity dbOrder;
             Library.Models.Order m_order;
 
             // Try to see if the order even exists if it does then assign it
@@ -226,7 +227,7 @@ namespace StoreApplication.DataAccess.Repositories
             string results = "";
 
             // Find if the location exists and include all information including orders and their orderlines
-            Location dbLocation = _context.Locations
+            LocationEntity dbLocation = _context.Locations
                 .Include(o => o.Orders)
                 .ThenInclude(ol => ol.Orderlines)
                 .FirstOrDefault(l => l.Id == locationID);
@@ -263,7 +264,7 @@ namespace StoreApplication.DataAccess.Repositories
             FillBookLibrary();
 
             // Attempt to find the customer
-            Customer dbCustomer = _context.Customers
+            CustomerEntity dbCustomer = _context.Customers
                 .Include(o => o.Orders)
                 .ThenInclude(ol => ol.Orderlines)
                 .FirstOrDefault(c => c.Id == id);
@@ -291,8 +292,8 @@ namespace StoreApplication.DataAccess.Repositories
         /// </summary>
         public void FillBookLibrary()
         {
-            IEnumerable<Book> dbBooks = _context.Books.ToList();
-            foreach (Book b in dbBooks)
+            IEnumerable<BookEntity> dbBooks = _context.Books.ToList();
+            foreach (BookEntity b in dbBooks)
             {
                 Library.Models.Book.Library.Add(Mapper_Book.Map(b));
             }

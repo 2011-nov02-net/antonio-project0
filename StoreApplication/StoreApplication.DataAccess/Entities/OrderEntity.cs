@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace StoreApplication.DataAccess.Entities
 {
-    public partial class Order
+    public partial class OrderEntity
     {
-        public Order()
+        public OrderEntity()
         {
-            Orderlines = new HashSet<Orderline>();
+            Orderlines = new HashSet<OrderlineEntity>();
         }
 
         public int Id { get; set; }
@@ -17,8 +17,8 @@ namespace StoreApplication.DataAccess.Entities
         public int LocationId { get; set; }
         public DateTime? OrderDate { get; set; }
 
-        public virtual Customer Customer { get; set; }
-        public virtual Location Location { get; set; }
-        public virtual ICollection<Orderline> Orderlines { get; set; }
+        public virtual CustomerEntity Customer { get; set; }
+        public virtual LocationEntity Location { get; set; }
+        public virtual ICollection<OrderlineEntity> Orderlines { get; set; }
     }
 }

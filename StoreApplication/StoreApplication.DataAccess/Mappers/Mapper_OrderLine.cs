@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StoreApplication.DataAccess
+namespace StoreApplication.DataAccess.Mappers
 {
     public static class Mapper_OrderLine
     {
@@ -13,7 +13,7 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="orderline"></param>
         /// <returns></returns>
-        public static Library.Models.OrderLine Map(Entities.Orderline orderline)
+        public static Library.Models.OrderLine Map(Entities.OrderlineEntity orderline)
         {
             return new Library.Models.OrderLine
             {
@@ -28,9 +28,9 @@ namespace StoreApplication.DataAccess
         /// </summary>
         /// <param name="orderline"></param>
         /// <returns></returns>
-        public static Entities.Orderline Map(Library.Models.OrderLine orderline)
+        public static Entities.OrderlineEntity Map(Library.Models.OrderLine orderline)
         {
-            return new Entities.Orderline
+            return new Entities.OrderlineEntity
             {
                 BookIsbn = orderline.BookISBN,
                 Quantity = orderline.Quantity

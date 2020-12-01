@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace StoreApplication.DataAccess.Entities
 {
-    public partial class Book
+    public partial class BookEntity
     {
-        public Book()
+        public BookEntity()
         {
-            Inventories = new HashSet<Inventory>();
-            Orderlines = new HashSet<Orderline>();
+            Inventories = new HashSet<InventoryEntity>();
+            Orderlines = new HashSet<OrderlineEntity>();
         }
 
         public string Isbn { get; set; }
@@ -19,7 +19,7 @@ namespace StoreApplication.DataAccess.Entities
         public string AuthorFirstName { get; set; }
         public string AuthorLastName { get; set; }
 
-        public virtual ICollection<Inventory> Inventories { get; set; }
-        public virtual ICollection<Orderline> Orderlines { get; set; }
+        public virtual ICollection<InventoryEntity> Inventories { get; set; }
+        public virtual ICollection<OrderlineEntity> Orderlines { get; set; }
     }
 }

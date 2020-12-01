@@ -17,16 +17,16 @@ namespace StoreApplication.DataAccess.Entities
         {
         }
 
-        public virtual DbSet<Book> Books { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<Inventory> Inventories { get; set; }
-        public virtual DbSet<Location> Locations { get; set; }
-        public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<Orderline> Orderlines { get; set; }
+        public virtual DbSet<BookEntity> Books { get; set; }
+        public virtual DbSet<CustomerEntity> Customers { get; set; }
+        public virtual DbSet<InventoryEntity> Inventories { get; set; }
+        public virtual DbSet<LocationEntity> Locations { get; set; }
+        public virtual DbSet<OrderEntity> Orders { get; set; }
+        public virtual DbSet<OrderlineEntity> Orderlines { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Book>(entity =>
+            modelBuilder.Entity<BookEntity>(entity =>
             {
                 entity.HasKey(e => e.Isbn)
                     .HasName("PK__book__99F9D0A56A3DF283");
@@ -55,7 +55,7 @@ namespace StoreApplication.DataAccess.Entities
                     .HasColumnName("price");
             });
 
-            modelBuilder.Entity<Customer>(entity =>
+            modelBuilder.Entity<CustomerEntity>(entity =>
             {
                 entity.ToTable("customer");
 
@@ -81,7 +81,7 @@ namespace StoreApplication.DataAccess.Entities
                     .HasConstraintName("FK__customer__locati__61F08603");
             });
 
-            modelBuilder.Entity<Inventory>(entity =>
+            modelBuilder.Entity<InventoryEntity>(entity =>
             {
                 entity.HasKey(e => new { e.LocationId, e.BookIsbn })
                     .HasName("PK__inventor__939A7875C75E8FB4");
@@ -109,7 +109,7 @@ namespace StoreApplication.DataAccess.Entities
                     .HasConstraintName("FK__inventory__locat__67A95F59");
             });
 
-            modelBuilder.Entity<Location>(entity =>
+            modelBuilder.Entity<LocationEntity>(entity =>
             {
                 entity.ToTable("location");
 
@@ -121,7 +121,7 @@ namespace StoreApplication.DataAccess.Entities
                     .HasColumnName("name");
             });
 
-            modelBuilder.Entity<Order>(entity =>
+            modelBuilder.Entity<OrderEntity>(entity =>
             {
                 entity.ToTable("orders");
 
@@ -149,7 +149,7 @@ namespace StoreApplication.DataAccess.Entities
                     .HasConstraintName("FK__orders__location__6C6E1476");
             });
 
-            modelBuilder.Entity<Orderline>(entity =>
+            modelBuilder.Entity<OrderlineEntity>(entity =>
             {
                 entity.ToTable("orderline");
 

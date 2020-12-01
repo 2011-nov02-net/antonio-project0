@@ -123,6 +123,5 @@ namespace StoreApplication.Library.Models
 
             return result;
         }
-
     }
 }
